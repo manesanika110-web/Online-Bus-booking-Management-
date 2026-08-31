@@ -1,0 +1,99 @@
+.cancel-step-card {
+  max-width: 450px; /* थोडी रुंदी वाढवली जेणेकरून फ्रॉम-टू बॉक्स चांगला दिसेल */
+  margin: 30px auto;
+  background: #ffffff;
+  border: 1px solid #b0c4de; /* व्यवस्थित बॉर्डर */
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.cancel-header-banner {
+  background-color: #1A3B8B;
+  color: white;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.cancel-body-content {
+  padding: 20px;
+  text-align: left;
+}
+
+.cancel-body-content h4 {
+  margin-top: 0;
+  color: #d9534f;
+  border-bottom: 2px solid #d9534f;
+  padding-bottom: 5px;
+}
+
+.alert-warning-text {
+  color: #ef4444;
+  font-size: 13px;
+  text-align: center;
+  font-weight: bold;
+  background: #fef2f2;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #fee2e2;
+}
+
+.summary-box {
+  background: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  margin: 15px 0;
+  line-height: 1.8;
+}
+
+.summary-box p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.refund-text {
+  color: #ef4444;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.action-buttons-group {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-back-outline {
+  flex: 1;
+  padding: 11px;
+  background: white;
+  color: #1A3B8B;
+  border: 1px solid #1A3B8B;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.btn-back-outline:hover {
+  background: #f0f4ff;
+}
+
+.btn-confirm-red {
+  flex: 1;
+  padding: 11px;
+  background: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.btn-confirm-red:hover {
+  background: #c9302c;
+}

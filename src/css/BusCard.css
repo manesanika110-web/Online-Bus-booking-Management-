@@ -1,0 +1,53 @@
+.bus-card{
+    background:white;
+    border-radius:15px;
+    margin-bottom:25px;
+    padding:25px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+    transition:.3s;
+}
+
+.bus-card:hover{
+    transform:translateY(-5px);
+}
+
+.bus-left h2{
+    color:#1E40AF;
+    margin-bottom:10px;
+}
+
+.bus-left p{
+    color:#666;
+    margin-bottom:12px;
+}
+
+.bus-left h3{
+    margin-bottom:8px;
+}
+
+.bus-right{
+    text-align:right;
+}
+
+.bus-right h2{
+    color:#2563EB;
+}
+
+.bus-right p{
+    margin:12px 0;
+}
+
+.bus-right button{
+    background:#2563EB;
+    color:white;
+    border:none;
+    padding:12px 25px;
+    border-radius:8px;
+    cursor:pointer;
+}

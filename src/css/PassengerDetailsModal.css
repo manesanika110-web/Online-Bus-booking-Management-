@@ -1,0 +1,225 @@
+/* Passenger Details Modal Styles matching user screenshot */
+.passenger-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.passenger-modal-clean-card {
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  width: 440px;
+  max-width: 95vw;
+  padding: 28px 28px 24px 28px;
+  position: relative;
+  animation: modalPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Close Button on Top Right */
+.clean-modal-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.clean-modal-close-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+/* Modal Title */
+.clean-modal-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  text-align: center;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.3px;
+}
+
+/* Mini Journey Pill */
+.clean-modal-journey-pill {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 11.5px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.clean-modal-journey-pill .dot-sep {
+  color: #cbd5e1;
+}
+
+.clean-modal-journey-pill strong {
+  color: #d84e55;
+}
+
+/* Error Notification */
+.clean-modal-error {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+/* Clean Form */
+.clean-passenger-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.clean-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.clean-form-group.flex-1 {
+  flex: 1;
+}
+
+.clean-field-label {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+/* Inputs */
+.clean-text-input {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.clean-text-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.clean-text-input:focus {
+  border-color: #d84e55;
+  box-shadow: 0 0 0 3px rgba(216, 78, 85, 0.15);
+}
+
+/* Select */
+.clean-select-input {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.clean-select-input:focus {
+  border-color: #d84e55;
+  box-shadow: 0 0 0 3px rgba(216, 78, 85, 0.15);
+}
+
+/* Row for Age & Gender */
+.clean-form-row {
+  display: flex;
+  gap: 16px;
+}
+
+/* Submit Button */
+.clean-submit-payment-btn {
+  margin-top: 8px;
+  background: linear-gradient(135deg, #e53935 0%, #d84e55 100%);
+  color: #ffffff;
+  border: none;
+  padding: 13px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(216, 78, 85, 0.35);
+  transition: all 0.2s;
+  font-family: inherit;
+  width: 100%;
+}
+
+.clean-submit-payment-btn:hover {
+  background: linear-gradient(135deg, #d32f2f 0%, #c93b42 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(216, 78, 85, 0.45);
+}
+
+@media (max-width: 480px) {
+  .passenger-modal-clean-card {
+    padding: 22px 18px 20px 18px;
+  }
+}

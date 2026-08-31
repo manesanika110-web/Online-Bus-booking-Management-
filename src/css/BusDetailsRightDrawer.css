@@ -1,0 +1,519 @@
+/* Clean Right Slide-over Bus Details Drawer Styles */
+.bus-drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeInBackdrop 0.2s ease;
+}
+
+@keyframes fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.bus-details-right-drawer.clean-details-drawer {
+  width: 480px;
+  max-width: 95vw;
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* 1. Header */
+.drawer-header-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #ffffff;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.drawer-close-circle-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.drawer-close-circle-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+.drawer-heading-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* 2. Scrollable Body */
+.drawer-clean-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Custom Scrollbar */
+.drawer-clean-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.drawer-clean-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+/* Operator Header */
+.clean-operator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.clean-bus-name {
+  font-size: 21px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 2px 0;
+  letter-spacing: -0.3px;
+}
+
+.clean-bus-type {
+  font-size: 13.5px;
+  color: #475569;
+  font-weight: 500;
+  margin: 0 0 6px 0;
+}
+
+.clean-route-hint {
+  font-size: 11.5px;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.clean-rating-badge {
+  background: #15803d;
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.clean-rating-badge .star-icon {
+  font-size: 12px;
+}
+
+.clean-rating-badge small {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+/* Bus Photo Card */
+.clean-bus-photo-card {
+  position: relative;
+  width: 100%;
+  height: 170px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.clean-bus-photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-route-overlay {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Schedule & Timing Card */
+.clean-schedule-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.schedule-time-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-time-block.text-right {
+  text-align: right;
+}
+
+.schedule-time-block .time-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.schedule-time-block .city-val {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.schedule-badge {
+  font-size: 10.5px;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.schedule-mid-duration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.duration-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #d84e55;
+}
+
+.duration-line-arrow {
+  display: flex;
+  align-items: center;
+  color: #94a3b8;
+}
+
+.duration-line-arrow .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+
+.duration-line-arrow .line {
+  width: 60px;
+  height: 1.5px;
+  background: #cbd5e1;
+}
+
+.duration-line-arrow .arrow {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-left: -2px;
+}
+
+.route-type-tag {
+  font-size: 10px;
+  color: #64748b;
+}
+
+/* Pricing & Seats Row */
+.clean-price-seats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+
+.fare-box,
+.seats-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.seats-box {
+  text-align: right;
+}
+
+.fare-label,
+.seats-label {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.fare-val-group {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.final-fare {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.strike-fare {
+  font-size: 13px;
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.seats-available-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ea580c;
+  background: #fff7ed;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* Info Sections */
+.clean-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-title-sm {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-icon {
+  font-size: 14px;
+}
+
+.section-icon.red {
+  color: #dc2626;
+}
+
+.section-icon.green {
+  color: #16a34a;
+}
+
+.section-icon.blue {
+  color: #0284c7;
+}
+
+.section-icon.orange {
+  color: #ea580c;
+}
+
+/* Points Timeline */
+.points-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 8px;
+  border-left: 2px solid #e2e8f0;
+  margin-left: 6px;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 14px;
+}
+
+.timeline-bullet {
+  position: absolute;
+  left: -15px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #dc2626;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px #dc2626;
+}
+
+.timeline-bullet.drop {
+  background: #16a34a;
+  box-shadow: 0 0 0 1px #16a34a;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.timeline-header strong {
+  color: #1e293b;
+}
+
+.point-time {
+  font-weight: 800;
+  color: #dc2626;
+  font-size: 12.5px;
+}
+
+.point-time.drop {
+  color: #16a34a;
+}
+
+.point-subtext {
+  font-size: 11.5px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+}
+
+/* Amenities Grid */
+.clean-amenities-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.amenity-chip-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.amenity-check {
+  color: #16a34a;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* Policy Table */
+.clean-policy-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.clean-policy-table th,
+.clean-policy-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.clean-policy-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+}
+
+.refund-high {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.refund-med {
+  color: #0284c7;
+  font-weight: 700;
+}
+
+.refund-low {
+  color: #ea580c;
+  font-weight: 700;
+}
+
+.refund-zero {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+/* 3. Footer */
+.drawer-clean-footer {
+  padding: 14px 20px;
+  border-top: 1px solid #f1f5f9;
+  background: #ffffff;
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.drawer-close-outline-btn {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.drawer-close-outline-btn:hover {
+  background: #e2e8f0;
+}

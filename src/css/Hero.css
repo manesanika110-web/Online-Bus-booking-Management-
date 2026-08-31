@@ -1,0 +1,153 @@
+/* Bus Vista Hero Section Styles */
+.busvista-hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 580px;
+  background: url("https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1920&q=85")
+    center center / cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-dark-overlay {
+  width: 100%;
+  min-height: 580px;
+  background: radial-gradient(
+      circle at center,
+      rgba(15, 23, 42, 0.65) 0%,
+      rgba(10, 15, 30, 0.88) 100%
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  box-sizing: border-box;
+}
+
+.hero-content-wrapper {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hero-badge-pill .star-icon {
+  color: #f59e0b;
+}
+
+.hero-main-title {
+  color: #ffffff;
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin: 0 0 12px 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.hero-subtitle {
+  color: #e2e8f0;
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0 0 38px 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  max-width: 700px;
+}
+
+/* Stats Row below Search */
+.hero-stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.hero-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 10px 20px;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.stat-icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(216, 78, 85, 0.25);
+  color: #f87171;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.stat-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-text strong {
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.stat-text span {
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-main-title {
+    font-size: 30px;
+  }
+
+  .hero-subtitle {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+
+  .busvista-hero-section,
+  .hero-dark-overlay {
+    min-height: auto;
+    padding: 40px 16px;
+  }
+
+  .hero-stats-row {
+    gap: 12px;
+    margin-top: 25px;
+  }
+
+  .hero-stat-item {
+    width: 100%;
+    max-width: 340px;
+  }
+}

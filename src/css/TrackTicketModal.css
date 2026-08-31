@@ -1,0 +1,740 @@
+/* Live GPS Bus Tracking Modal Styles (Matching Point 5 & Image 5) */
+.track-modal-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.track-modal-container {
+  background: #ffffff;
+  border-radius: 22px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+  width: 950px;
+  max-width: 96vw;
+  max-height: 92vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 1. Header */
+.track-modal-header {
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.track-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.track-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #e53935 0%, #d84e55 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(216, 78, 85, 0.3);
+}
+
+.track-header-left h2 {
+  font-size: 19px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.track-header-left p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+}
+
+.track-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.live-pulsing-badge {
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #86efac;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+  animation: pulseGreen 1.5s infinite;
+}
+
+@keyframes pulseGreen {
+  0% {
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(22, 163, 74, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+  }
+}
+
+.track-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.track-close-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* 2. Quick Search Bar */
+.track-search-bar-strip {
+  padding: 12px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.track-search-form {
+  position: relative;
+  width: 340px;
+  max-width: 100%;
+}
+
+.track-search-form .search-icon {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.track-search-input {
+  width: 100%;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px 65px 8px 34px;
+  font-size: 13px;
+  color: #0f172a;
+  outline: none;
+}
+
+.track-search-input:focus {
+  border-color: #d84e55;
+}
+
+.track-search-btn {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  bottom: 4px;
+  background: #d84e55;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.quick-track-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chips-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.quick-chip-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.quick-chip-btn:hover {
+  background: #f1f5f9;
+}
+
+.quick-chip-btn.active {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+/* 3. Main Grid Layout */
+.track-main-grid-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  min-height: 480px;
+}
+
+/* Left Telemetry Panel */
+.telemetry-panel-left {
+  padding: 20px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.telemetry-top-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.reg-pnr-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.live-status-pill.online {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #15803d;
+  background: #dcfce7;
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bus-reg-tag {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.pnr-display-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.pnr-red {
+  color: #dc2626;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+/* Route Card */
+.telemetry-route-card {
+  background: #fff5f5;
+  border: 1px solid #fee2e2;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.telemetry-route-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.route-city-col strong {
+  display: block;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.route-city-col small {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.route-arrow-col {
+  color: #d84e55;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.travel-date-tag {
+  font-size: 11.5px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-top: 1px dashed #fca5a5;
+  padding-top: 6px;
+}
+
+/* Stats Section */
+.telemetry-stats-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.telemetry-sec-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: #475569;
+  letter-spacing: 0.5px;
+  margin: 0 0 2px 0;
+}
+
+.telemetry-two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.telemetry-stat-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.stat-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.speed-val {
+  color: #15803d;
+  font-size: 15px;
+}
+
+.telemetry-full-stat-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.eta-val {
+  color: #dc2626;
+  font-size: 15px;
+}
+
+.loc-val {
+  color: #0284c7;
+  font-size: 12.5px;
+}
+
+/* Driver Footer */
+.telemetry-driver-footer {
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.driver-info-meta small {
+  display: block;
+  font-size: 10px;
+  color: #64748b;
+}
+
+.driver-info-meta strong {
+  font-size: 12.5px;
+  color: #0f172a;
+}
+
+.call-driver-btn {
+  background: #15803d;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.telemetry-sync-time {
+  font-size: 10.5px;
+  color: #94a3b8;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+/* Right Live Radar Map Panel */
+.live-radar-map-panel {
+  position: relative;
+  background: #0f172a;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.live-radar-map-panel.roadmap {
+  background: #e2e8f0;
+  background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px),
+    linear-gradient(to right, #f1f5f9 1px, transparent 1px),
+    linear-gradient(to bottom, #f1f5f9 1px, transparent 1px);
+  background-size: 24px 24px, 48px 48px, 48px 48px;
+}
+
+.live-radar-map-panel.satellite {
+  background: #0a1128;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Floating Map Controls */
+.map-floating-top-controls {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+
+.map-type-toggle-group {
+  display: flex;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 3px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.map-toggle-btn {
+  background: transparent;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.map-toggle-btn.active {
+  background: #d84e55;
+  color: #ffffff;
+}
+
+.map-zoom-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.map-zoom-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.map-zoom-btn:hover {
+  background: #f1f5f9;
+}
+
+/* Map Canvas Container */
+.map-canvas-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  transform-origin: center center;
+  transition: transform 0.2s ease-out;
+}
+
+.route-svg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.highway-path-bg {
+  fill: none;
+  stroke: #94a3b8;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.highway-path-completed {
+  fill: none;
+  stroke: #10b981;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 8, 4;
+}
+
+/* Waypoints */
+.map-waypoint-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+.waypoint-pin {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.waypoint-pin.green {
+  background: #16a34a;
+}
+.waypoint-pin.green .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.waypoint-pin.yellow {
+  background: #d97706;
+  font-size: 13px;
+}
+
+.waypoint-pin.red {
+  background: #dc2626;
+  font-size: 13px;
+}
+
+.waypoint-tooltip {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin-top: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.waypoint-tooltip strong {
+  display: block;
+  font-size: 11px;
+  color: #0f172a;
+}
+
+.waypoint-tooltip small {
+  font-size: 9.5px;
+  color: #64748b;
+}
+
+/* Live Moving Bus Radar Pin */
+.live-bus-radar-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bus-marker-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #dc2626;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.5);
+  position: relative;
+  z-index: 2;
+}
+
+.radar-pulse-ring {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(220, 38, 38, 0.25);
+  animation: radarPulse 2s infinite ease-out;
+}
+
+.radar-pulse-ring.ring-2 {
+  animation-delay: 0.8s;
+}
+
+@keyframes radarPulse {
+  0% {
+    transform: scale(0.4);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.bus-live-tag-popup {
+  background: #ffffff;
+  border: 1.5px solid #fca5a5;
+  border-radius: 8px;
+  padding: 4px 10px;
+  margin-top: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.popup-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: #0f172a;
+}
+
+.live-blink-circle {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #dc2626;
+  animation: pulseRed 1s infinite;
+}
+
+.popup-sub {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+/* Bottom Floating Bar */
+.map-floating-bottom-bar {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  right: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  color: #334155;
+  z-index: 20;
+}
+
+@media (max-width: 800px) {
+  .track-main-grid-layout {
+    grid-template-columns: 1fr;
+  }
+  .telemetry-panel-left {
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .map-canvas-container {
+    min-height: 320px;
+  }
+}

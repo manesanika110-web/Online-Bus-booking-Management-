@@ -1,0 +1,417 @@
+/* =========================================================
+   TRAINS PAGE - ROYAL NAVY BLUE DARK THEME
+   (Theme: Deep Navy Blue & Sapphire/Cyan Accents)
+   ========================================================= */
+
+.trains-page-wrapper {
+  background: #071326;
+  background-image: 
+    radial-gradient(at 15% 15%, rgba(29, 78, 216, 0.18) 0px, transparent 50%),
+    radial-gradient(at 85% 85%, rgba(37, 99, 235, 0.14) 0px, transparent 50%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #eff6ff;
+}
+
+/* 1. Hero Search Section */
+.trains-hero-banner {
+  background: linear-gradient(180deg, #0a1c38 0%, #071326 100%);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.25);
+  padding: 42px 24px 34px 24px;
+}
+
+.trains-hero-container {
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.trains-badge {
+  background: rgba(37, 99, 235, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 5px 14px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+}
+
+.trains-hero-container h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.trains-hero-container p {
+  font-size: 14.5px;
+  color: #93c5fd;
+  margin: 0 0 24px 0;
+}
+
+/* Search Card */
+.trains-search-card {
+  background: rgba(12, 35, 69, 0.85);
+  border: 1.5px solid rgba(96, 165, 250, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 20px 22px;
+  display: grid;
+  grid-template-columns: 1.5fr auto 1.5fr 1fr 1fr auto;
+  gap: 12px;
+  align-items: flex-end;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(37, 99, 235, 0.15);
+}
+
+.train-search-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.train-search-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #93c5fd;
+}
+
+.train-input {
+  width: 100%;
+  background: #08172e;
+  border: 1.5px solid rgba(96, 165, 250, 0.35);
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.train-input option {
+  background: #0a1c38;
+  color: #ffffff;
+}
+
+.train-input:focus {
+  border-color: #60a5fa;
+  background: #0b2246;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.swap-btn {
+  background: rgba(37, 99, 235, 0.25);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  color: #60a5fa;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 2px;
+  transition: all 0.2s;
+}
+
+.swap-btn:hover {
+  transform: rotate(180deg);
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.train-search-submit-btn {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.train-search-submit-btn:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.55);
+}
+
+/* 2. Main Content Layout */
+.trains-main-content {
+  max-width: 1150px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 34px 24px 60px 24px;
+  flex: 1;
+}
+
+.list-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.list-header-row h2 {
+  font-size: 21px;
+  color: #ffffff;
+  margin: 0;
+  font-weight: 800;
+}
+
+.list-header-row h2 strong {
+  color: #60a5fa;
+}
+
+.irctc-badge {
+  background: rgba(37, 99, 235, 0.2);
+  color: #93c5fd;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 3. Train Cards List */
+.train-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.train-card-item {
+  background: #0c2345;
+  border: 1.5px solid rgba(96, 165, 250, 0.25);
+  border-left: 5px solid #3b82f6;
+  border-radius: 18px;
+  padding: 22px 26px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.train-card-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(96, 165, 250, 0.4);
+  border-color: #60a5fa;
+  border-left-color: #60a5fa;
+}
+
+.train-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.15);
+}
+
+.train-name-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.train-icon-red {
+  color: #60a5fa !important;
+  font-size: 24px;
+}
+
+.train-name-block h3 {
+  font-size: 19px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.train-name-block h3 span {
+  color: #93c5fd;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.train-name-block small {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+/* Schedule */
+.train-schedule-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.15);
+}
+
+.station-node {
+  display: flex;
+  flex-direction: column;
+}
+
+.station-node .time {
+  font-size: 20px;
+  font-weight: 800;
+  color: #60a5fa;
+}
+
+.station-node .station {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.station-node.text-right {
+  text-align: right;
+}
+
+.duration-line-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.dur-text {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #93c5fd;
+  background: #08172e;
+  border: 1px solid rgba(96, 165, 250, 0.25);
+  padding: 3px 12px;
+  border-radius: 14px;
+}
+
+.track-graphic {
+  display: flex;
+  align-items: center;
+  color: #475569;
+}
+
+.track-graphic .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3b82f6;
+}
+
+.track-graphic .line {
+  width: 90px;
+  height: 2px;
+  background: rgba(96, 165, 250, 0.3);
+}
+
+.track-graphic .arrow {
+  font-size: 12px;
+  color: #60a5fa;
+  margin-left: -2px;
+}
+
+.date-sub {
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+/* Classes Grid */
+.class-availability-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.class-tier-box {
+  background: #08172e;
+  border: 1.5px solid rgba(96, 165, 250, 0.25);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.15s;
+}
+
+.class-tier-box:hover {
+  border-color: #60a5fa;
+  background: #0a1f3d;
+}
+
+.class-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.class-top strong {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.class-fare {
+  font-size: 17px;
+  font-weight: 800;
+  color: #60a5fa;
+}
+
+.class-name {
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+.status-badge-green {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 6px 0;
+}
+
+.book-class-btn {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+  border: none;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.book-class-btn:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+}
+
+@media (max-width: 800px) {
+  .trains-search-card {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,284 @@
+/* Modern SearchBox Styles matching Bus Vista */
+.searchbox-outer-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-pill-container {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 60px;
+  padding: 8px 12px 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-sizing: border-box;
+}
+
+/* Individual Field Item */
+.search-input-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1.2;
+  position: relative;
+  background: #ffffff;
+  padding: 6px 12px;
+  border-radius: 30px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.search-input-field:focus-within {
+  border-color: #d84e55;
+  box-shadow: 0 0 0 2px rgba(216, 78, 85, 0.12);
+}
+
+.field-icon-wrapper {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.field-icon-wrapper.red-pin {
+  color: #dc2626;
+}
+
+.field-icon-wrapper.rocket-icon {
+  color: #0284c7;
+}
+
+.field-icon-wrapper.calendar-icon {
+  color: #ea580c;
+}
+
+.field-input-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.city-select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  padding: 6px 0;
+  font-family: inherit;
+}
+
+.city-select option {
+  font-size: 14.5px;
+  color: #0f172a;
+  background: #ffffff;
+  padding: 8px;
+}
+
+/* Swap Button */
+.search-swap-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.search-swap-btn:hover {
+  background: #f1f5f9;
+  color: #d84e55;
+  border-color: #d84e55;
+}
+
+.search-swap-btn.rotating {
+  transform: rotate(180deg);
+}
+
+/* Date Picker Field */
+.search-input-field.date-field {
+  flex: 1;
+}
+
+.date-native-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #1e293b;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 4px 0;
+}
+
+/* Quick Date Pills */
+.quick-date-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.quick-pill-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 9px 15px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.quick-pill-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.quick-pill-btn.active {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+/* Search Buses Submit Button */
+.search-buses-submit-btn {
+  background: linear-gradient(135deg, #e53935 0%, #d84e55 100%);
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 14px rgba(216, 78, 85, 0.4);
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+
+.search-buses-submit-btn:hover {
+  background: linear-gradient(135deg, #d32f2f 0%, #c93b42 100%);
+  box-shadow: 0 6px 18px rgba(216, 78, 85, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-search-icon {
+  font-size: 16px;
+}
+
+/* Error Message Toast */
+.search-error-toast {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #f87171;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-top: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: fadeInToast 0.2s ease;
+}
+
+@keyframes fadeInToast {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Search Box */
+@media (max-width: 1100px) {
+  .search-pill-container {
+    border-radius: 24px;
+    padding: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .search-input-field {
+    flex: 1 1 calc(50% - 30px);
+  }
+
+  .search-input-field.date-field {
+    flex: 1 1 calc(50% - 10px);
+  }
+
+  .quick-date-pills {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .search-buses-submit-btn {
+    flex: 1 1 100%;
+    justify-content: center;
+    border-radius: 14px;
+    padding: 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  .search-pill-container {
+    border-radius: 18px;
+    padding: 14px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input-field,
+  .search-input-field.date-field {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .search-swap-btn {
+    align-self: center;
+    margin: -4px 0;
+  }
+
+  .quick-date-pills {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .quick-pill-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .search-buses-submit-btn {
+    width: 100%;
+  }
+}
