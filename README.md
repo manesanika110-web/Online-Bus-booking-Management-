@@ -1,16 +1,37 @@
-# React + Vite
+# 🚌 BusVista - Bus Booking Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+BusVista is a React-based Bus Booking Management System that allows users to search buses, select seats, enter passenger details, make payments, and manage bookings.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 🔍 Search buses by source and destination
+- 🚌 View available buses and bus details
+- 💺 Select seats
+- 👤 Passenger details form
+- 💳 Multiple payment methods
+- 🎫 Booking confirmation
+- 📋 My Bookings
+- 📄 Download ticket as PDF
+- 🖨️ Print ticket
+- ❌ Cancel booking
+- 📱 Responsive UI
 
-## React Compiler
+## 🛠️ Technologies
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React.js
+- JavaScript
+- CSS
+- React Router
+- React Icons
+- jsPDF
+- Vite
 
-## Expanding the ESLint configuration
+## 📂 Project Flow
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Home → Search Bus → Bus Details → Seat Selection → Passenger Details → Payment → Booking Success → My Bookings
+
+## 🚀 Run Project
+
+```bash
+npm install
+npm run dev
