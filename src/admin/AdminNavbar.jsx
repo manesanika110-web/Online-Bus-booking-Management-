@@ -18,6 +18,8 @@ import {
   FaExclamationCircle,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
 
 function AdminNavbar({
   activeTab,
@@ -43,10 +45,16 @@ function AdminNavbar({
   // Close dropdowns when clicking outside anywhere on document
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target)
+      ) {
         setProfileDropdown(false);
       }
-      if (notifDropdownRef.current && !notifDropdownRef.current.contains(event.target)) {
+      if (
+        notifDropdownRef.current &&
+        !notifDropdownRef.current.contains(event.target)
+      ) {
         setNotifDropdown(false);
       }
     };
@@ -97,21 +105,45 @@ function AdminNavbar({
   const getPageTitle = () => {
     switch (activeTab) {
       case "dashboard":
-        return { title: "Dashboard Overview", subtitle: "Real-time analytics & fleet summary" };
+        return {
+          title: "Dashboard Overview",
+          subtitle: "Real-time analytics & fleet summary",
+        };
       case "users":
-        return { title: "User Management", subtitle: "Registered customers & profiles" };
+        return {
+          title: "User Management",
+          subtitle: "Registered customers & profiles",
+        };
       case "buses":
-        return { title: "Bus Fleet Management", subtitle: "Active coaches, seats & schedules" };
+        return {
+          title: "Bus Fleet Management",
+          subtitle: "Active coaches, seats & schedules",
+        };
       case "routes":
-        return { title: "Route Operations", subtitle: "Corridors, distance, and stops" };
+        return {
+          title: "Route Operations",
+          subtitle: "Corridors, distance, and stops",
+        };
       case "bookings":
-        return { title: "All Bookings", subtitle: "Real-time reservations & e-tickets" };
+        return {
+          title: "All Bookings",
+          subtitle: "Real-time reservations & e-tickets",
+        };
       case "payments":
-        return { title: "Payment Transactions", subtitle: "Financial revenue & collections" };
+        return {
+          title: "Payment Transactions",
+          subtitle: "Financial revenue & collections",
+        };
       case "support":
-        return { title: "Customer Support & Inquiries", subtitle: "Real-time user help requests & issue tracking" };
+        return {
+          title: "Customer Support & Inquiries",
+          subtitle: "Real-time user help requests & issue tracking",
+        };
       case "livetracking":
-        return { title: "Live Fleet GPS Tracking", subtitle: "Active buses booked today & live telemetry" };
+        return {
+          title: "Live Fleet GPS Tracking",
+          subtitle: "Active buses booked today & live telemetry",
+        };
       default:
         return { title: "Admin Console", subtitle: "BusVista Control Center" };
     }
@@ -119,17 +151,17 @@ function AdminNavbar({
 
   const { title, subtitle } = getPageTitle();
 
-  const handleLogout = () => {
-    localStorage.removeItem("busvista_admin_auth");
-    localStorage.removeItem("busvista_admin_email");
-    localStorage.removeItem("busvista_admin_login_time");
+  const handleLogout = async () => {
+    await signOut(auth);
     navigate("/admin/login");
   };
 
   const getNotifIcon = (type) => {
     switch (type) {
       case "support":
-        return <FaHeadset className="notif-type-icon" style={{ color: "#d81b60" }} />;
+        return (
+          <FaHeadset className="notif-type-icon" style={{ color: "#d81b60" }} />
+        );
       case "booking":
         return <FaTicketAlt className="notif-type-icon booking" />;
       case "payment":
@@ -196,7 +228,10 @@ function AdminNavbar({
       {/* Right controls */}
       <div className="navbar-right">
         {/* Real-time Status Indicator */}
-        <div className="admin-live-badge" title="Connected to Firebase Firestore in Real-Time (7 Collections Active)">
+        <div
+          className="admin-live-badge"
+          title="Connected to Firebase Firestore in Real-Time (7 Collections Active)"
+        >
           <span className="live-pulse-dot"></span>
           <span className="live-text">Firestore Live</span>
         </div>
@@ -213,7 +248,9 @@ function AdminNavbar({
             title="Real-Time Alerts (Bookings & Support Queries)"
           >
             <FaBell />
-            {unreadCount > 0 && <span className="notif-count-badge">{unreadCount}</span>}
+            {unreadCount > 0 && (
+              <span className="notif-count-badge">{unreadCount}</span>
+            )}
           </button>
 
           {notifDropdown && (
@@ -221,10 +258,16 @@ function AdminNavbar({
               <div className="notif-dropdown-header">
                 <div>
                   <strong>Live Activity Stream</strong>
-                  <span className="notif-counter-tag">{unreadCount} pending</span>
+                  <span className="notif-counter-tag">
+                    {unreadCount} pending
+                  </span>
                 </div>
                 {liveAlerts.length > 0 && (
-                  <button type="button" className="notif-clear-btn" onClick={handleClearAllAlerts}>
+                  <button
+                    type="button"
+                    className="notif-clear-btn"
+                    onClick={handleClearAllAlerts}
+                  >
                     Mark All Read
                   </button>
                 )}
@@ -235,7 +278,9 @@ function AdminNavbar({
                   <div className="notif-empty-box">
                     <FaBell className="notif-empty-icon" />
                     <p>No new alerts at this moment.</p>
-                    <small>Real-time booking and user activities will appear here.</small>
+                    <small>
+                      Real-time booking and user activities will appear here.
+                    </small>
                   </div>
                 ) : (
                   liveAlerts.map((n) => (
@@ -245,16 +290,24 @@ function AdminNavbar({
                       onClick={() => {
                         setDismissedAlerts((prev) => new Set([...prev, n.id]));
                         setNotifDropdown(false);
-                        if (setActiveTab && n.targetTab) setActiveTab(n.targetTab);
+                        if (setActiveTab && n.targetTab)
+                          setActiveTab(n.targetTab);
                       }}
                     >
-                      <div className="notif-icon-col">{getNotifIcon(n.type)}</div>
+                      <div className="notif-icon-col">
+                        {getNotifIcon(n.type)}
+                      </div>
                       <div className="notif-content-col">
                         <strong className="notif-item-title">{n.title}</strong>
                         <p className="notif-item-msg">{n.message}</p>
                         <span className="notif-time-ago">
                           <FaClock className="mini-icon" />{" "}
-                          {n.timestamp ? new Date(n.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "Just now"}
+                          {n.timestamp
+                            ? new Date(n.timestamp).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })
+                            : "Just now"}
                         </span>
                       </div>
                       {!n.read && (
@@ -304,7 +357,9 @@ function AdminNavbar({
               <span className="admin-name">{currentAdmin.name}</span>
               <span className="admin-email-tag">{currentAdmin.email}</span>
             </div>
-            <FaChevronDown className={`profile-chevron ${profileDropdown ? "open" : ""}`} />
+            <FaChevronDown
+              className={`profile-chevron ${profileDropdown ? "open" : ""}`}
+            />
           </button>
 
           {profileDropdown && (
@@ -315,11 +370,17 @@ function AdminNavbar({
                 </div>
                 <div className="dropdown-user-details">
                   <strong>{currentAdmin.name}</strong>
-                  <small>{currentAdmin.email} • {currentAdmin.role}</small>
+                  <small>
+                    {currentAdmin.email} • {currentAdmin.role}
+                  </small>
                 </div>
               </div>
               <div className="dropdown-divider"></div>
-              <Link to="/" className="dropdown-item" onClick={() => setProfileDropdown(false)}>
+              <Link
+                to="/"
+                className="dropdown-item"
+                onClick={() => setProfileDropdown(false)}
+              >
                 <FaExternalLinkAlt /> Go to User Website
               </Link>
               <button

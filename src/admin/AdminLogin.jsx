@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   FaLock,
@@ -8,15 +8,15 @@ import {
   FaShieldAlt,
   FaArrowRight,
   FaArrowLeft,
-  FaCheckCircle,
   FaExclamationCircle,
 } from "react-icons/fa";
 import { successAlert, errorAlert } from "../utils/alert";
 import BusVistaLogo from "../components/BusVistaLogo";
 import "../css/AdminLogin.css";
+import { auth } from "../firebase";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 
 const ADMIN_EMAIL = "busvista@gmail.com";
-const ADMIN_PASSWORD = "bus@00";
 
 function AdminLogin() {
   const navigate = useNavigate();
@@ -26,52 +26,56 @@ function AdminLogin() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // If already authenticated, redirect to /admin
+  // If already authenticated as the admin, redirect to /admin.
   useEffect(() => {
-    const isAuth = localStorage.getItem("busvista_admin_auth");
-    if (isAuth === "true") {
-      navigate("/admin");
-    }
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser?.email?.toLowerCase() === ADMIN_EMAIL) {
+        navigate("/admin");
+      }
+    });
+    return unsubscribe;
   }, [navigate]);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMessage("");
 
     const trimmedEmail = email.trim().toLowerCase();
-    const trimmedPassword = password;
 
-    if (!trimmedEmail || !trimmedPassword) {
+    if (!trimmedEmail || !password) {
       setErrorMessage("Please enter both email and password.");
       return;
     }
 
     setIsLoading(true);
 
-    setTimeout(() => {
-      // Strict credentials check
-      if (trimmedEmail === ADMIN_EMAIL.toLowerCase() && trimmedPassword === ADMIN_PASSWORD) {
-        // Save verified admin session
-        localStorage.setItem("busvista_admin_auth", "true");
-        localStorage.setItem("busvista_admin_email", ADMIN_EMAIL);
-        localStorage.setItem("busvista_admin_login_time", new Date().toISOString());
-
-        successAlert("Admin Access Granted! Welcome to BusVista Admin Panel.").then(() => {
-          navigate("/admin");
-        });
-      } else {
-        const errorMsg = "Invalid email or password";
-        setErrorMessage(errorMsg);
-        errorAlert(errorMsg);
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        trimmedEmail,
+        password,
+      );
+      if (userCredential.user.email?.toLowerCase() !== ADMIN_EMAIL) {
+        await auth.signOut();
+        throw new Error("Invalid admin credentials.");
       }
+      setEmail("");
+      setPassword("");
+      await successAlert(
+        "Admin Access Granted! Welcome to BusVista Admin Panel.",
+      );
+      navigate("/admin");
+    } catch (error) {
+      console.error("Admin login error:", error);
+      const errorMsg =
+        error.message === "Invalid admin credentials."
+          ? error.message
+          : "Invalid email or password";
+      setErrorMessage(errorMsg);
+      errorAlert(errorMsg);
+    } finally {
       setIsLoading(false);
-    }, 600);
-  };
-
-  const handleFillDemo = () => {
-    setEmail(ADMIN_EMAIL);
-    setPassword(ADMIN_PASSWORD);
-    setErrorMessage("");
+    }
   };
 
   return (
@@ -94,7 +98,8 @@ function AdminLogin() {
             </div>
             <h1 className="admin-login-title">Admin Portal Sign In</h1>
             <p className="admin-login-subtitle">
-              Enter your authorized administrator credentials to access the management console.
+              Enter your authorized administrator credentials to access the
+              management console.
             </p>
           </div>
 
@@ -107,7 +112,11 @@ function AdminLogin() {
           )}
 
           {/* Form */}
-          <form className="admin-login-form" onSubmit={handleLogin}>
+          <form
+            className="admin-login-form"
+            onSubmit={handleLogin}
+            autoComplete="off"
+          >
             <div className="admin-form-group">
               <label htmlFor="admin-email">Admin Email Address</label>
               <div className="admin-input-wrapper">
@@ -115,13 +124,13 @@ function AdminLogin() {
                 <input
                   id="admin-email"
                   type="email"
-                  placeholder="busvista@gmail.com"
+                  placeholder="Enter admin email"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
                     if (errorMessage) setErrorMessage("");
                   }}
-                  autoComplete="email"
+                  autoComplete="off"
                   required
                 />
               </div>
@@ -140,7 +149,7 @@ function AdminLogin() {
                     setPassword(e.target.value);
                     if (errorMessage) setErrorMessage("");
                   }}
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   required
                 />
                 <button
@@ -152,22 +161,6 @@ function AdminLogin() {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-            </div>
-
-            {/* Quick Demo Credentials Helper */}
-            <div className="demo-credentials-box">
-              <div className="demo-creds-info">
-                <span className="demo-label">Authorized Credentials:</span>
-                <code className="demo-code">busvista@gmail.com / bus@00</code>
-              </div>
-              <button
-                type="button"
-                className="fill-demo-btn"
-                onClick={handleFillDemo}
-                title="Auto-fill authorized credentials"
-              >
-                Auto Fill
-              </button>
             </div>
 
             <button

@@ -35,8 +35,8 @@ import BusVistaLogo from "./BusVistaLogo";
 
 function Navbar() {
   const [user, setUser] = useState(() => auth.currentUser);
-  const [profilePhoto, setProfilePhoto] = useState(() =>
-    localStorage.getItem("profilePhoto") || null
+  const [profilePhoto, setProfilePhoto] = useState(
+    () => localStorage.getItem("profilePhoto") || null,
   );
   const [activeTab, setActiveTab] = useState("buses");
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -139,6 +139,7 @@ function Navbar() {
       await signOut(auth);
       setUser(null);
       setProfilePhoto(null);
+      window.dispatchEvent(new Event("authLoggedOut"));
       window.dispatchEvent(new Event("profileUpdated"));
       window.dispatchEvent(new Event("storage"));
       await successAlert("Logged out successfully!");
@@ -181,7 +182,11 @@ function Navbar() {
         <div className="busvista-nav-container">
           {/* 1. Left Logo */}
           <div className="busvista-logo-wrapper">
-            <Link to="/" className="busvista-brand" onClick={() => setActiveTab("buses")}>
+            <Link
+              to="/"
+              className="busvista-brand"
+              onClick={() => setActiveTab("buses")}
+            >
               <div className="logo-icon-badge">
                 <BusVistaLogo size={42} />
               </div>
@@ -208,17 +213,26 @@ function Navbar() {
 
           {/* 3. Right Action Menu */}
           <div className="busvista-right-menu">
-            <button className="nav-action-link" onClick={() => setIsOffersOpen(true)}>
+            <button
+              className="nav-action-link"
+              onClick={() => setIsOffersOpen(true)}
+            >
               <FaGift className="action-icon icon-offers" />
               <span>Offers</span>
             </button>
 
-            <button className="nav-action-link" onClick={() => setIsTrackOpen(true)}>
+            <button
+              className="nav-action-link"
+              onClick={() => setIsTrackOpen(true)}
+            >
               <FaMapMarkerAlt className="action-icon icon-track" />
               <span>Track Ticket</span>
             </button>
 
-            <button className="nav-action-link" onClick={() => setIsHelpOpen(true)}>
+            <button
+              className="nav-action-link"
+              onClick={() => setIsHelpOpen(true)}
+            >
               <FaQuestionCircle className="action-icon icon-help" />
               <span>Need Help?</span>
             </button>
@@ -232,12 +246,20 @@ function Navbar() {
                   aria-expanded={userDropdownOpen}
                 >
                   {profilePhoto ? (
-                    <img src={profilePhoto} alt="Profile" className="user-avatar-img" />
+                    <img
+                      src={profilePhoto}
+                      alt="Profile"
+                      className="user-avatar-img"
+                    />
                   ) : (
-                    <div className="user-avatar-initial">{getUserInitial()}</div>
+                    <div className="user-avatar-initial">
+                      {getUserInitial()}
+                    </div>
                   )}
                   <span className="user-name-text">{getUserName()}</span>
-                  <FaChevronDown className={`chevron-icon ${userDropdownOpen ? "rotate" : ""}`} />
+                  <FaChevronDown
+                    className={`chevron-icon ${userDropdownOpen ? "rotate" : ""}`}
+                  />
                 </button>
 
                 {userDropdownOpen && (
@@ -285,8 +307,7 @@ function Navbar() {
                       </li>
 
                       {/* Admin Panel button - specifically shown for Admin (busvista@gmail.com) */}
-                      {(user?.email?.toLowerCase() === "busvista@gmail.com" ||
-                        localStorage.getItem("busvista_admin_auth") === "true") && (
+                      {user?.email?.toLowerCase() === "busvista@gmail.com" && (
                         <li>
                           <Link
                             to="/admin"
@@ -300,7 +321,10 @@ function Navbar() {
                               margin: "4px 0",
                             }}
                           >
-                            <FaUserShield className="item-icon" style={{ color: "#8e24aa" }} />
+                            <FaUserShield
+                              className="item-icon"
+                              style={{ color: "#8e24aa" }}
+                            />
                             <span>Admin Panel</span>
                           </Link>
                         </li>
@@ -310,7 +334,10 @@ function Navbar() {
                     <div className="dropdown-divider"></div>
 
                     <div className="dropdown-footer">
-                      <button className="dropdown-logout-btn" onClick={handleLogout}>
+                      <button
+                        className="dropdown-logout-btn"
+                        onClick={handleLogout}
+                      >
                         <FaSignOutAlt />
                         <span>Logout</span>
                       </button>
@@ -377,7 +404,8 @@ function Navbar() {
                   setMobileMenuOpen(false);
                 }}
               >
-                <FaMapMarkerAlt className="action-icon icon-track" /> Track Ticket
+                <FaMapMarkerAlt className="action-icon icon-track" /> Track
+                Ticket
               </button>
               <button
                 className="mobile-link-item"
@@ -386,13 +414,13 @@ function Navbar() {
                   setMobileMenuOpen(false);
                 }}
               >
-                <FaQuestionCircle className="action-icon icon-help" /> Need Help?
+                <FaQuestionCircle className="action-icon icon-help" /> Need
+                Help?
               </button>
 
               {user ? (
                 <>
-                  {(user?.email?.toLowerCase() === "busvista@gmail.com" ||
-                    localStorage.getItem("busvista_admin_auth") === "true") && (
+                  {user?.email?.toLowerCase() === "busvista@gmail.com" && (
                     <Link
                       to="/admin"
                       className="mobile-link-item"
@@ -451,9 +479,15 @@ function Navbar() {
       </nav>
 
       {/* Modals */}
-      <TrackTicketModal isOpen={isTrackOpen} onClose={() => setIsTrackOpen(false)} />
+      <TrackTicketModal
+        isOpen={isTrackOpen}
+        onClose={() => setIsTrackOpen(false)}
+      />
       <NeedHelpModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
-      <OffersModal isOpen={isOffersOpen} onClose={() => setIsOffersOpen(false)} />
+      <OffersModal
+        isOpen={isOffersOpen}
+        onClose={() => setIsOffersOpen(false)}
+      />
       <ServiceModal
         isOpen={Boolean(serviceModalType)}
         serviceType={serviceModalType}

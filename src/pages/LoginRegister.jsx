@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
-  FaArrowRight,
-  FaChevronLeft,
   FaEye,
   FaEyeSlash,
   FaUser,
@@ -55,6 +53,21 @@ function LoginRegister() {
 
   const navigate = useNavigate();
 
+  const resetAuthForm = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+    setShowPassword(false);
+    setResetEmail("");
+  };
+
+  useEffect(() => {
+    const handleLogout = () => resetAuthForm();
+    window.addEventListener("authLoggedOut", handleLogout);
+
+    return () => window.removeEventListener("authLoggedOut", handleLogout);
+  }, []);
+
   // Handle Register Submit
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -72,7 +85,7 @@ function LoginRegister() {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email.trim(),
-        password
+        password,
       );
 
       const defaultAvatar =
@@ -101,12 +114,12 @@ function LoginRegister() {
       localStorage.removeItem("profilePhoto");
       window.dispatchEvent(new Event("profileUpdated"));
 
-      // Clear password field & switch directly to Login tab
-      setPassword("");
+      // Clear registration fields before showing the empty login form.
+      resetAuthForm();
       setActiveTab("login");
 
       await successAlert(
-        "Account Created Successfully! Please login with your email & password to continue."
+        "Account Created Successfully! Please login with your email & password to continue.",
       );
     } catch (error) {
       console.error(error);
@@ -121,38 +134,20 @@ function LoginRegister() {
     e.preventDefault();
     setLoading(true);
 
-    const trimmedEmail = email.trim().toLowerCase();
-    const trimmedPassword = password;
-
     try {
-      // 1. Check if user is logging in with Admin Credentials
-      if (trimmedEmail === "busvista@gmail.com" && trimmedPassword === "bus@00") {
-        localStorage.setItem("busvista_admin_auth", "true");
-        localStorage.setItem("busvista_admin_email", "busvista@gmail.com");
-        localStorage.setItem("busvista_admin_login_time", new Date().toISOString());
-
-        try {
-          await signInWithEmailAndPassword(auth, email.trim(), password);
-        } catch (err) {
-          // If admin isn't in Firebase auth yet, session is still verified locally
-        }
-
-        await successAlert("Admin Login Successful! Redirecting to Admin Dashboard...");
-        navigate("/admin");
-        return;
-      }
-
-      // 2. Regular User Login via Firebase Authentication
+      // Regular user login via Firebase Authentication.
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email.trim(),
-        password
+        password,
       );
 
       // Fetch Firestore profile data if available
       if (db) {
         try {
-          const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+          const userDoc = await getDoc(
+            doc(db, "users", userCredential.user.uid),
+          );
           if (userDoc.exists()) {
             const data = userDoc.data();
             if (data.displayName || data.name) {
@@ -197,7 +192,7 @@ function LoginRegister() {
             profilePhoto: user.photoURL || "",
             lastLogin: new Date().toISOString(),
           },
-          { merge: true }
+          { merge: true },
         );
       }
 
@@ -205,16 +200,8 @@ function LoginRegister() {
       if (user.photoURL) localStorage.setItem("profilePhoto", user.photoURL);
       window.dispatchEvent(new Event("profileUpdated"));
 
-      // If logging in as admin email via Google
-      if (user.email?.toLowerCase() === "busvista@gmail.com") {
-        localStorage.setItem("busvista_admin_auth", "true");
-        localStorage.setItem("busvista_admin_email", "busvista@gmail.com");
-        await successAlert(`Welcome Admin! Redirecting to Admin Panel...`);
-        navigate("/admin");
-      } else {
-        await successAlert(`Welcome, ${user.displayName || "Traveler"}!`);
-        navigate("/");
-      }
+      await successAlert(`Welcome, ${user.displayName || "Traveler"}!`);
+      navigate("/");
     } catch (error) {
       console.error("Google Auth error:", error);
       errorAlert(error.message);
@@ -234,7 +221,7 @@ function LoginRegister() {
     try {
       await sendPasswordResetEmail(auth, resetEmail.trim());
       await successAlert(
-        "Password reset link has been sent to your email. Please check your inbox/spam folder."
+        "Password reset link has been sent to your email. Please check your inbox/spam folder.",
       );
       setForgotModalOpen(false);
       setResetEmail("");
@@ -291,8 +278,9 @@ function LoginRegister() {
               <span>Bus Rental Service</span>
             </h1>
             <p className="visual-hero-subtitle">
-              Convenience on a budget with our Most Affordable Bus Rental Service.
-              Enjoy live GPS tracking, clean luxury buses, and zero cancellation fee.
+              Convenience on a budget with our Most Affordable Bus Rental
+              Service. Enjoy live GPS tracking, clean luxury buses, and zero
+              cancellation fee.
             </p>
 
             <div className="feature-chips-row">
@@ -350,7 +338,11 @@ function LoginRegister() {
           {/* TAB 1: LOG IN FORM                                       */}
           {/* ======================================================== */}
           {activeTab === "login" ? (
-            <form onSubmit={handleLogin} className="auth-core-form">
+            <form
+              onSubmit={handleLogin}
+              className="auth-core-form"
+              autoComplete="off"
+            >
               {/* Field: Email */}
               <div className="auth-input-group">
                 <label className="input-label-text">Email Address</label>
@@ -361,6 +353,7 @@ function LoginRegister() {
                     className="styled-auth-input"
                     placeholder="Enter Your Email"
                     value={email}
+                    autoComplete="off"
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
@@ -389,6 +382,7 @@ function LoginRegister() {
                     className="styled-auth-input with-toggle"
                     placeholder="Enter Your Password"
                     value={password}
+                    autoComplete="new-password"
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
@@ -437,7 +431,7 @@ function LoginRegister() {
                   className="social-brand-btn apple-pill-btn"
                   onClick={() =>
                     errorAlert(
-                      "Apple Sign In is supported on iOS devices. Please use Google or Email."
+                      "Apple Sign In is supported on iOS devices. Please use Google or Email.",
                     )
                   }
                   title="Sign in with Apple"
@@ -451,7 +445,7 @@ function LoginRegister() {
                   className="social-brand-btn fb-pill-btn"
                   onClick={() =>
                     errorAlert(
-                      "Facebook Sign In is temporarily unavailable. Please use Google or Email."
+                      "Facebook Sign In is temporarily unavailable. Please use Google or Email.",
                     )
                   }
                   title="Sign in with Facebook"
@@ -477,7 +471,11 @@ function LoginRegister() {
             /* ======================================================== */
             /* TAB 2: CREATE NEW ACCOUNT (REGISTER) FORM                */
             /* ======================================================== */
-            <form onSubmit={handleRegister} className="auth-core-form">
+            <form
+              onSubmit={handleRegister}
+              className="auth-core-form"
+              autoComplete="off"
+            >
               {/* Field: Full Name */}
               <div className="auth-input-group">
                 <label className="input-label-text">Full Name</label>
@@ -504,6 +502,7 @@ function LoginRegister() {
                     className="styled-auth-input"
                     placeholder="example@gmail.com"
                     value={email}
+                    autoComplete="off"
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
@@ -520,6 +519,7 @@ function LoginRegister() {
                     className="styled-auth-input with-toggle"
                     placeholder="••••••••"
                     value={password}
+                    autoComplete="new-password"
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
@@ -596,7 +596,7 @@ function LoginRegister() {
                   className="social-brand-btn apple-pill-btn"
                   onClick={() =>
                     errorAlert(
-                      "Apple Sign In is supported on iOS devices. Please use Google or Email."
+                      "Apple Sign In is supported on iOS devices. Please use Google or Email.",
                     )
                   }
                   title="Sign up with Apple"
@@ -610,7 +610,7 @@ function LoginRegister() {
                   className="social-brand-btn fb-pill-btn"
                   onClick={() =>
                     errorAlert(
-                      "Facebook Sign In is temporarily unavailable. Please use Google or Email."
+                      "Facebook Sign In is temporarily unavailable. Please use Google or Email.",
                     )
                   }
                   title="Sign up with Facebook"
@@ -726,24 +726,24 @@ function LoginRegister() {
 
             <div className="terms-scroll-body">
               <p>
-                <strong>1. Acceptance of Terms:</strong> By creating an account on
-                BusVista, you agree to comply with all booking rules, safety guidelines,
-                and applicable travel policies.
+                <strong>1. Acceptance of Terms:</strong> By creating an account
+                on BusVista, you agree to comply with all booking rules, safety
+                guidelines, and applicable travel policies.
               </p>
               <p>
-                <strong>2. Ticket Booking & Validity:</strong> All bus tickets booked
-                through BusVista are non-transferable and require a valid government ID
-                matching passenger details during boarding.
+                <strong>2. Ticket Booking & Validity:</strong> All bus tickets
+                booked through BusVista are non-transferable and require a valid
+                government ID matching passenger details during boarding.
               </p>
               <p>
-                <strong>3. Cancellation & Refunds:</strong> Cancellations made up to 6
-                hours prior to departure are eligible for fast refund according to
-                operator policy.
+                <strong>3. Cancellation & Refunds:</strong> Cancellations made
+                up to 6 hours prior to departure are eligible for fast refund
+                according to operator policy.
               </p>
               <p>
-                <strong>4. Privacy & Data Protection:</strong> We protect your personal
-                and travel data with high-grade encryption for seamless booking and real-time
-                bus tracking.
+                <strong>4. Privacy & Data Protection:</strong> We protect your
+                personal and travel data with high-grade encryption for seamless
+                booking and real-time bus tracking.
               </p>
             </div>
 
