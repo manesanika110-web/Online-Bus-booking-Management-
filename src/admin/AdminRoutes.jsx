@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   FaRoute,
   FaPlus,
@@ -10,7 +10,6 @@ import {
   FaEdit,
   FaTrashAlt,
   FaTimes,
-  FaCheckCircle,
 } from "react-icons/fa";
 import {
   addRouteToFirestore,
@@ -19,7 +18,7 @@ import {
 } from "./adminDataService";
 import { successAlert, errorAlert } from "../utils/alert";
 
-function AdminRoutes({ routes = [], searchQuery = "", onAddNewRoute }) {
+function AdminRoutes({ routes = [], searchQuery = "" }) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingRoute, setEditingRoute] = useState(null);
 
@@ -140,8 +139,8 @@ function AdminRoutes({ routes = [], searchQuery = "", onAddNewRoute }) {
 
       {/* Routes Grid */}
       <div className="admin-routes-grid">
-        {filteredRoutes.map((rt) => (
-          <div key={rt.id || rt.docId || Math.random()} className="admin-route-card">
+        {filteredRoutes.map((rt, index) => (
+          <div key={rt.id || rt.docId || `route-${index}`} className="admin-route-card">
             <div className="route-card-header">
               <div className="route-card-title">
                 <h3>

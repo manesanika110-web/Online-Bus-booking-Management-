@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FaTimes, FaGift, FaCopy, FaCheck, FaTag, FaBus } from "react-icons/fa";
+import  { useState } from "react";
+import { FaTimes, FaGift, FaCopy, FaCheck, FaTag } from "react-icons/fa";
 import "../css/Modal.css";
 
 const OffersModal = ({ isOpen, onClose }) => {

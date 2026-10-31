@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import  { useRef, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -11,9 +11,6 @@ import {
   FaArrowLeft,
   FaCheckCircle,
   FaShieldAlt,
-  FaUser,
-  FaPhoneAlt,
-  FaEnvelope,
   FaCalendarAlt,
   FaClock,
 } from "react-icons/fa";

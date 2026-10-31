@@ -1,6 +1,6 @@
-import React from "react";
+import "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaBus, FaArrowRight, FaExclamationTriangle } from "react-icons/fa"; // आयकॉन्स जोडले
+import {  FaArrowRight, FaExclamationTriangle } from "react-icons/fa"; // आयकॉन्स जोडले
 import "../css/CancelBooking.css";
 
 import { auth, db } from "../firebase";

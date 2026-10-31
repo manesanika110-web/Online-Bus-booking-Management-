@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { FaTimes, FaHeadset, FaPhoneAlt, FaEnvelope, FaWhatsapp, FaQuestionCircle, FaPaperPlane } from "react-icons/fa";
 import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";

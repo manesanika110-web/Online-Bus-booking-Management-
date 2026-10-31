@@ -1,4 +1,4 @@
-import React from "react";
+import "react";
 
 const BusVistaLogo = ({ size = 48, width, height, className = "" }) => {
   const finalWidth = width || Math.round(size * 1.45);

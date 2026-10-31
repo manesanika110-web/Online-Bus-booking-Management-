@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   FaRupeeSign,
   FaCreditCard,
-  FaSearch,
   FaCheckCircle,
   FaExchangeAlt,
   FaTimes,
@@ -11,10 +10,8 @@ import {
   FaUniversity,
   FaWallet,
   FaShieldAlt,
-  FaCalendarAlt,
   FaPrint,
   FaFileInvoiceDollar,
-  FaQrcode,
 } from "react-icons/fa";
 
 function AdminPayments({ payments = [], bookings = [], searchQuery = "" }) {

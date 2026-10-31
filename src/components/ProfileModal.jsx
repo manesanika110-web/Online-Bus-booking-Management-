@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import  { useState, useEffect, useRef } from "react";
 import {
   FaTimes,
   FaUser,
@@ -8,7 +8,6 @@ import {
   FaSave,
   FaUpload,
   FaKey,
-  FaIdCard,
   FaPhoneAlt,
   FaTrashAlt,
   FaEye,

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FaMobileAlt, FaGooglePlay, FaApple, FaQrcode, FaCheck, FaPaperPlane } from "react-icons/fa";
+import  { useState } from "react";
+import {  FaGooglePlay, FaApple, FaQrcode, FaCheck, FaPaperPlane } from "react-icons/fa";
 import { successAlert } from "../utils/alert";
 import "../css/HomeSections.css";
 

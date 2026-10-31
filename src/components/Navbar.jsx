@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import  { useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./../css/Navbar.css";
 import {
@@ -6,18 +6,13 @@ import {
   FaGift,
   FaMapMarkerAlt,
   FaQuestionCircle,
-  FaUserCircle,
   FaChevronDown,
   FaSignOutAlt,
   FaTicketAlt,
-  FaLock,
   FaUser,
-  FaBan,
   FaBars,
   FaTimes,
-  FaHotel,
   FaTrain,
-  FaPlane,
   FaUserShield,
 } from "react-icons/fa";
 
@@ -38,7 +33,6 @@ function Navbar() {
   const [profilePhoto, setProfilePhoto] = useState(
     () => localStorage.getItem("profilePhoto") || null,
   );
-  const [activeTab, setActiveTab] = useState("buses");
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -52,19 +46,13 @@ function Navbar() {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Sync active service tab from URL path
-  useEffect(() => {
-    if (location.pathname.startsWith("/hotels")) {
-      setActiveTab("hotels");
-    } else if (location.pathname.startsWith("/trains")) {
-      setActiveTab("trains");
-    } else if (location.pathname.startsWith("/flights")) {
-      setActiveTab("flights");
-    } else {
-      setActiveTab("buses");
-    }
-  }, [location.pathname]);
+  const activeTab = location.pathname.startsWith("/hotels")
+    ? "hotels"
+    : location.pathname.startsWith("/trains")
+      ? "trains"
+      : location.pathname.startsWith("/flights")
+        ? "flights"
+        : "buses";
 
   // Listen for local profile updates
   useEffect(() => {
@@ -150,7 +138,6 @@ function Navbar() {
   };
 
   const handleServiceClick = (service) => {
-    setActiveTab(service);
     if (service === "buses") {
       navigate("/");
     } else if (service === "hotels") {
@@ -185,7 +172,6 @@ function Navbar() {
             <Link
               to="/"
               className="busvista-brand"
-              onClick={() => setActiveTab("buses")}
             >
               <div className="logo-icon-badge">
                 <BusVistaLogo size={42} />

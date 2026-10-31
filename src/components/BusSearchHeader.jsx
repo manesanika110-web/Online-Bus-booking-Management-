@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { FaMapMarkerAlt, FaExchangeAlt, FaCalendarAlt, FaSearch } from "react-icons/fa";
+import  { useState, useEffect } from "react";
+import { FaMapMarkerAlt, FaExchangeAlt, FaCalendarAlt } from "react-icons/fa";
 import CustomCitySelect from "./CustomCitySelect";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -25,22 +25,33 @@ const BusSearchHeader = ({ currentFrom, currentTo, currentDate, onSearchUpdate }
   const [isSwapping, setIsSwapping] = useState(false);
 
   useEffect(() => {
+    let active = true;
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        if (currentFrom) setFrom(currentFrom);
-        else setFrom((prev) => prev || "Sangli");
+      queueMicrotask(() => {
+        if (!active) return;
+        if (currentUser) {
+          if (currentFrom) setFrom(currentFrom);
+          else setFrom((prev) => prev || "Sangli");
 
-        if (currentTo) setTo(currentTo);
-        else setTo((prev) => prev || "Goa");
-      } else {
-        if (!currentFrom) setFrom("");
-        if (!currentTo) setTo("");
-      }
+          if (currentTo) setTo(currentTo);
+          else setTo((prev) => prev || "Goa");
+        } else {
+          if (!currentFrom) setFrom("");
+          if (!currentTo) setTo("");
+        }
+      });
     });
 
-    if (currentDate) setDate(currentDate);
+    if (currentDate) {
+      queueMicrotask(() => {
+        if (active) setDate(currentDate);
+      });
+    }
 
-    return () => unsubscribe();
+    return () => {
+      active = false;
+      unsubscribe();
+    };
   }, [currentFrom, currentTo, currentDate]);
 
   // Instant update on Origin city change

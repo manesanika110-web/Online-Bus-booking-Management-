@@ -1,16 +1,12 @@
-import React from "react";
+import "react";
 import {
   FaTimes,
   FaStar,
-  FaBus,
   FaMapMarkerAlt,
   FaClock,
-  FaRupeeSign,
   FaCheckCircle,
   FaShieldAlt,
   FaArrowRight,
-  FaWifi,
-  FaUsers,
 } from "react-icons/fa";
 import "../css/BusDetailsRightDrawer.css";
 

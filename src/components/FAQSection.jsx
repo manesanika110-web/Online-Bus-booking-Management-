@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { FaChevronDown, FaQuestionCircle } from "react-icons/fa";
 import "../css/HomeSections.css";
 

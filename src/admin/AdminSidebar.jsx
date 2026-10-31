@@ -1,4 +1,4 @@
-import React from "react";
+import "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSignOutAlt, FaExternalLinkAlt, FaTimes } from "react-icons/fa";
 import BusVistaLogo from "../components/BusVistaLogo";

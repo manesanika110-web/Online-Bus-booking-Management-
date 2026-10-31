@@ -1,16 +1,12 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import {
   FaTrain,
-  FaMapMarkerAlt,
-  FaCalendarAlt,
   FaSearch,
   FaExchangeAlt,
   FaCheckCircle,
-  FaClock,
-  FaChair,
   FaShieldAlt,
   FaArrowRight,
 } from "react-icons/fa";
@@ -85,6 +81,13 @@ const sampleTrains = [
   },
 ];
 
+const createTrainBookingIds = () => ({
+  pnr: `TRN${Math.floor(1000000000 + Math.random() * 9000000000)
+    .toString()
+    .slice(0, 10)}`,
+  bookingId: `TBK${Math.floor(100000 + Math.random() * 900000)}`,
+});
+
 const Trains = () => {
   const navigate = useNavigate();
 
@@ -100,8 +103,7 @@ const Trains = () => {
   };
 
   const handleBookTrain = async (train, cls) => {
-    const pnr = "TRN" + Math.floor(1000000000 + Math.random() * 9000000000).toString().slice(0, 10);
-    const bookingId = "TBK" + Math.floor(100000 + Math.random() * 900000);
+    const { pnr, bookingId } = createTrainBookingIds();
 
     const newTrainBooking = {
       bookingId,

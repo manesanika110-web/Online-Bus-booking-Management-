@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState } from "react";
 import {
   FaSatelliteDish,
   FaBus,
@@ -7,18 +7,17 @@ import {
   FaPhoneAlt,
   FaUserFriends,
   FaTicketAlt,
-  FaCheckCircle,
   FaClock,
-  FaSearch,
-  FaFilter,
   FaRoute,
   FaCompass,
   FaSyncAlt,
-  FaExclamationTriangle,
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
 import { updateBusLocationInFirestore } from "./adminDataService";
+
+const getSimulatedSpeed = (currentSpeed) =>
+  Math.max(35, Math.min(85, currentSpeed + (Math.random() > 0.5 ? 5 : -5)));
 
 function AdminLiveTracking({
   busLocations = [],
@@ -30,14 +29,13 @@ function AdminLiveTracking({
   const [filterMode, setFilterMode] = useState("booked_today"); // "booked_today" | "all" | "moving"
   const [expandedBusId, setExpandedBusId] = useState(null);
   const [simulating, setSimulating] = useState(false);
-  const [selectedRouteFilter, setSelectedRouteFilter] = useState("all");
+  const [selectedRouteFilter] = useState("all");
 
   // Get Today's Date String in YYYY-MM-DD format & readable formats
   const todayStr = new Date().toISOString().split("T")[0];
 
   // 1. Group Bookings by Bus (matching by busId, busName, or route)
   const bookingsByBus = {};
-  let totalTodayBookingsCount = 0;
   let totalTodayPassengersCount = 0;
 
   bookings.forEach((b) => {
@@ -56,14 +54,13 @@ function AdminLiveTracking({
     });
 
     if (isTodayOrActive && b.status !== "cancelled") {
-      totalTodayBookingsCount += 1;
       const seatCount = Array.isArray(b.selectedSeats) ? b.selectedSeats.length : 1;
       totalTodayPassengersCount += seatCount;
     }
   });
 
   // 2. Build Rich Real-Time Fleet Locations with Passenger Manifests
-  const liveFleet = busLocations.map((loc, idx) => {
+  const liveFleet = busLocations.map((loc) => {
     const matchedBus = buses.find((b) => String(b.id) === String(loc.busId)) || {};
     const busKey = String(loc.busId);
 
@@ -132,7 +129,7 @@ function AdminLiveTracking({
     setSimulating(true);
     try {
       const currentSpeedNum = parseInt(coach.speed) || 55;
-      const newSpeed = Math.max(35, Math.min(85, currentSpeedNum + (Math.random() > 0.5 ? 5 : -5)));
+      const newSpeed = getSimulatedSpeed(currentSpeedNum);
       
       await updateBusLocationInFirestore(coach.id, {
         speed: `${newSpeed} km/h`,

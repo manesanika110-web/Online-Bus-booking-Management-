@@ -1,5 +1,5 @@
-import React from "react";
-import { FaTimes, FaCamera, FaBus, FaStar, FaShieldAlt } from "react-icons/fa";
+import "react";
+import { FaTimes, FaCamera, FaStar, FaShieldAlt } from "react-icons/fa";
 import "../css/Modal.css";
 
 const BusPhotoModal = ({ isOpen, onClose, bus }) => {

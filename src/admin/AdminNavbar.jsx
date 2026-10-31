@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import  { useState, useEffect, useRef } from "react";
 import {
   FaBars,
   FaSearch,
@@ -6,7 +6,6 @@ import {
   FaSyncAlt,
   FaUserShield,
   FaSignOutAlt,
-  FaCheckCircle,
   FaExternalLinkAlt,
   FaChevronDown,
   FaClock,
@@ -15,7 +14,6 @@ import {
   FaUser,
   FaBus,
   FaHeadset,
-  FaExclamationCircle,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
@@ -26,8 +24,6 @@ function AdminNavbar({
   onToggleSidebar,
   searchQuery,
   setSearchQuery,
-  isLiveSynced = true,
-  lastUpdated,
   bookings = [],
   supportQueries = [],
   admins = [],

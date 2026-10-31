@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaBus,
   FaPlus,
-  FaSearch,
   FaEdit,
   FaTrashAlt,
   FaStar,
-  FaCheckCircle,
   FaClock,
-  FaMapMarkerAlt,
-  FaRupeeSign,
   FaChair,
   FaTimes,
-  FaWifi,
-  FaSnowflake,
-  FaBolt,
 } from "react-icons/fa";
 import {
   addBusToFirestore,
@@ -24,7 +17,7 @@ import {
 import { successAlert, errorAlert } from "../utils/alert";
 import { uploadImage } from "../utils/imageStorage";
 
-function AdminBuses({ buses = [], searchQuery = "", onAddNewBus }) {
+function AdminBuses({ buses = [], searchQuery = "" }) {
   const [filterType, setFilterType] = useState("all");
   const [editingBus, setEditingBus] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -226,10 +219,10 @@ function AdminBuses({ buses = [], searchQuery = "", onAddNewBus }) {
 
       {/* Buses Grid / Cards */}
       <div className="admin-buses-grid">
-        {filteredBuses.map((bus) => {
+        {filteredBuses.map((bus, index) => {
           const status = bus.status || "Active";
           return (
-            <div key={bus.id || bus.docId || Math.random()} className="admin-bus-card">
+            <div key={bus.id || bus.docId || `bus-${index}`} className="admin-bus-card">
               {bus.photos?.[0] && (
                 <img
                   className="admin-bus-product-image"

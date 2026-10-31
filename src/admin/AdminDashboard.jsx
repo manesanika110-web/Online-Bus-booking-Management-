@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   FaUsers,
   FaBus,
@@ -7,18 +7,12 @@ import {
   FaRupeeSign,
   FaArrowUp,
   FaArrowRight,
-  FaCalendarAlt,
-  FaCheckCircle,
   FaClock,
   FaPlus,
-  FaChartLine,
-  FaBolt,
-  FaShieldAlt,
   FaMapMarkerAlt,
   FaSatelliteDish,
   FaTachometerAlt,
   FaPhoneAlt,
-  FaBell,
   FaUserShield,
   FaHeadset,
 } from "react-icons/fa";
@@ -31,7 +25,6 @@ function AdminDashboard({
   payments = [],
   supportQueries = [],
   busLocations = [],
-  admins = [],
   setActiveTab,
   onOpenAddBus,
   onOpenAddRoute,

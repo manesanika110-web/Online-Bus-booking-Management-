@@ -1,4 +1,4 @@
-import React from "react";
+import "react";
 import { FaSearch, FaChair, FaCreditCard, FaTicketAlt } from "react-icons/fa";
 import "../css/HomeSections.css";
 

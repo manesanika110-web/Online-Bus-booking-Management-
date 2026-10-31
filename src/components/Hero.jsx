@@ -1,4 +1,4 @@
-import React from "react";
+import "react";
 import "./../css/Hero.css";
 import SearchBox from "./SearchBox";
 import { FaShieldAlt, FaTicketAlt, FaHeadset, FaStar } from "react-icons/fa";

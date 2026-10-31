@@ -1,19 +1,12 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   FaUsers,
-  FaUserPlus,
-  FaSearch,
   FaEnvelope,
   FaPhone,
-  FaCalendarAlt,
-  FaTicketAlt,
-  FaRupeeSign,
   FaCheckCircle,
   FaBan,
   FaEye,
   FaTimes,
-  FaUserShield,
-  FaFilter,
 } from "react-icons/fa";
 import { updateUserStatusInFirestore } from "./adminDataService";
 import { successAlert, errorAlert } from "../utils/alert";
@@ -21,7 +14,7 @@ import { successAlert, errorAlert } from "../utils/alert";
 function AdminUsers({ users = [], bookings = [], searchQuery = "" }) {
   const [selectedUser, setSelectedUser] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
-  const [localSearch, setLocalSearch] = useState("");
+  const [localSearch] = useState("");
 
   const effectiveSearch = searchQuery || localSearch;
 
@@ -133,14 +126,14 @@ function AdminUsers({ users = [], bookings = [], searchQuery = "" }) {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => {
+              {filteredUsers.map((user, index) => {
                 const stats = getUserStats(user.id || user.uid, user.email);
                 const userName = user.displayName || user.name || "Customer";
                 const userPhoto = user.profilePhoto || user.photoURL;
                 const status = user.status || "Active";
 
                 return (
-                  <tr key={user.id || user.uid || Math.random()}>
+                  <tr key={user.id || user.uid || `user-${index}`}>
                     <td>
                       <div className="user-profile-cell">
                         {userPhoto ? (

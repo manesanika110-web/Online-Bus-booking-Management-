@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import { FaChevronDown, FaMapMarkerAlt, FaSearch, FaCheck, FaCity } from "react-icons/fa";
 import "../css/CustomCitySelect.css";
 

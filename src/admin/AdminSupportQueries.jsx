@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   FaHeadset,
-  FaSearch,
   FaFilter,
   FaCheckCircle,
   FaClock,
@@ -9,11 +8,8 @@ import {
   FaTrashAlt,
   FaEnvelope,
   FaPhoneAlt,
-  FaUser,
-  FaCalendarAlt,
   FaTimes,
   FaReply,
-  FaTag,
 } from "react-icons/fa";
 import {
   updateSupportQueryStatusInFirestore,
@@ -123,14 +119,7 @@ function AdminSupportQueries({ queries = [], searchQuery = "" }) {
     );
   };
 
-  const getCategoryColor = (issueType = "") => {
-    const it = issueType.toLowerCase();
-    if (it.includes("payment")) return "cat-tag-purple";
-    if (it.includes("cancellation") || it.includes("refund")) return "cat-tag-red";
-    if (it.includes("delay") || it.includes("boarding")) return "cat-tag-orange";
-    if (it.includes("booking")) return "cat-tag-blue";
-    return "cat-tag-green";
-  };
+
 
   return (
     <div className="admin-bookings-view">

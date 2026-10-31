@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import  { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
 import AdminNavbar from "./AdminNavbar";
 import AdminDashboard from "./AdminDashboard";
@@ -26,14 +26,14 @@ import "../css/AdminPanel.css";
 
 function AdminLayout() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
+
 
   // Tab from URL query or state
   const tabFromUrl = searchParams.get("tab") || "dashboard";
-  const [activeTab, setActiveTab] = useState(tabFromUrl);
+  const activeTab = tabFromUrl;
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLiveSynced, setIsLiveSynced] = useState(true);
+  const isLiveSynced = true;
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
   // Real-time Firestore Collections
@@ -45,7 +45,6 @@ function AdminLayout() {
   const [supportQueries, setSupportQueries] = useState([]);
   const [busLocations, setBusLocations] = useState([]);
   const [admins, setAdmins] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Track initial booking count for incoming toast notifications
   const prevBookingsCount = useRef(null);
@@ -54,21 +53,12 @@ function AdminLayout() {
 
   // Sync tab with URL search parameter
   const handleTabChange = (newTab) => {
-    setActiveTab(newTab);
     setSearchParams({ tab: newTab });
     setSearchQuery("");
   };
 
-  useEffect(() => {
-    if (tabFromUrl !== activeTab) {
-      setActiveTab(tabFromUrl);
-    }
-  }, [tabFromUrl]);
-
   // Real-time Firestore Subscriptions for all Active Collections
   useEffect(() => {
-    setIsLoading(true);
-
     // 1. users
     const unsubUsers = subscribeToUsers((data) => {
       setUsers(data);
@@ -105,7 +95,6 @@ function AdminLayout() {
       prevBookingsCount.current = data.length;
       setBookings(data);
       setLastUpdated(new Date());
-      setIsLoading(false);
     });
 
     // 5. payments

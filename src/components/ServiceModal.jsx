@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { FaTimes, FaHotel, FaTrain, FaPlane, FaCheckCircle, FaBell } from "react-icons/fa";
 import { successAlert } from "../utils/alert";
 import "../css/Modal.css";

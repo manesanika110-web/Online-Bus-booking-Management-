@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   FaStar,
   FaMapMarkerAlt,
   FaCamera,
   FaChevronDown,
-  FaChevronUp,
   FaUsers,
   FaCheckCircle,
 } from "react-icons/fa";

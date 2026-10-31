@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { FaTag, FaCopy, FaCheck, FaGift } from "react-icons/fa";
 import "../css/HomeSections.css";
 

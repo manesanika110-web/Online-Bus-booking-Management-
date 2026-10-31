@@ -1,4 +1,4 @@
-import React from "react";
+import "react";
 import { useNavigate } from "react-router-dom";
 import { FaBus, FaArrowRight, FaClock } from "react-icons/fa";
 import puneKolhapurImg from "../assets/pune_kolhapur_bus.jpg";

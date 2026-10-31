@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -9,13 +9,8 @@ import {
   FaUserFriends,
   FaSearch,
   FaStar,
-  FaWifi,
-  FaSwimmingPool,
-  FaCoffee,
-  FaTv,
   FaCheckCircle,
   FaShieldAlt,
-  FaRupeeSign,
 } from "react-icons/fa";
 import { successAlert, errorAlert } from "../utils/alert";
 import { auth } from "../firebase";
@@ -95,6 +90,9 @@ const sampleHotels = [
   },
 ];
 
+const createHotelBookingId = () =>
+  `HTL${Math.floor(100000 + Math.random() * 900000)}`;
+
 const Hotels = () => {
   const navigate = useNavigate();
 
@@ -102,7 +100,6 @@ const Hotels = () => {
   const [checkInDate, setCheckInDate] = useState("2026-08-20");
   const [checkOutDate, setCheckOutDate] = useState("2026-08-22");
   const [guests, setGuests] = useState("2 Guests, 1 Room");
-  const [bookingHotel, setBookingHotel] = useState(null);
 
   const filteredHotels = sampleHotels.filter(
     (h) => !destination || h.city.toLowerCase().includes(destination.toLowerCase()) || h.location.toLowerCase().includes(destination.toLowerCase())
@@ -113,7 +110,7 @@ const Hotels = () => {
     const uid = user?.uid || "";
     const userEmail = user?.email || "";
 
-    const bookingId = "HTL" + Math.floor(100000 + Math.random() * 900000);
+    const bookingId = createHotelBookingId();
     const newHotelBooking = {
       bookingId,
       userId: uid,

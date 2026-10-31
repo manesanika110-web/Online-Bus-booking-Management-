@@ -1,6 +1,6 @@
-import React from "react";
+import "react";
 import { useNavigate } from "react-router-dom"; // रिएक्ट राउटर नेव्हिगेशनसाठी
-import { FaShieldAlt, FaRupeeSign, FaBus } from "react-icons/fa"; // प्रोफेशनल आयकॉन्स
+ // प्रोफेशनल आयकॉन्स
 import "../css/AboutUs.css";
 
 const AboutUs = () => {

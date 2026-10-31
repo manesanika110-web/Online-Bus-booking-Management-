@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import  { useState, useMemo, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import BusSearchHeader from "../components/BusSearchHeader";
@@ -11,12 +11,12 @@ import PassengerDetailsModal from "../components/PassengerDetailsModal";
 import PaymentModal from "../components/PaymentModal";
 import { getBusesForRoute } from "../data/busData";
 import { subscribeToBuses } from "../admin/adminDataService";
-import { FaBus, FaExclamationCircle } from "react-icons/fa";
+import {  FaExclamationCircle } from "react-icons/fa";
 import "../css/SearchResults.css";
 
 function SearchResults() {
   const location = useLocation();
-  const navigate = useNavigate();
+
 
   // Search parameters from navigation state or defaults
   const searchState = location.state || {};
@@ -56,9 +56,16 @@ function SearchResults() {
 
   // Update route data when location state changes
   useEffect(() => {
-    if (location.state?.from) setCurrentFrom(location.state.from);
-    if (location.state?.to) setCurrentTo(location.state.to);
-    if (location.state?.date) setCurrentDate(location.state.date);
+    let active = true;
+    queueMicrotask(() => {
+      if (!active) return;
+      if (location.state?.from) setCurrentFrom(location.state.from);
+      if (location.state?.to) setCurrentTo(location.state.to);
+      if (location.state?.date) setCurrentDate(location.state.date);
+    });
+    return () => {
+      active = false;
+    };
   }, [location.state]);
 
   useEffect(() => {

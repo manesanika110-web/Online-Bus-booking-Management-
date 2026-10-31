@@ -1,23 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   FaTicketAlt,
-  FaSearch,
-  FaFilter,
   FaCheckCircle,
-  FaClock,
   FaTimesCircle,
   FaEye,
   FaPrint,
   FaTimes,
   FaBus,
   FaUser,
-  FaPhone,
-  FaEnvelope,
   FaMapMarkerAlt,
   FaRupeeSign,
   FaCalendarAlt,
-  FaExchangeAlt,
-  FaShieldAlt,
 } from "react-icons/fa";
 import { updateBookingStatusInFirestore } from "./adminDataService";
 import { successAlert, errorAlert } from "../utils/alert";
@@ -25,7 +18,6 @@ import { successAlert, errorAlert } from "../utils/alert";
 function AdminBookings({ bookings = [], searchQuery = "" }) {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedBooking, setSelectedBooking] = useState(null);
-  const [ticketModalBooking, setTicketModalBooking] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
   // Filter Bookings strictly based on real Firestore data
@@ -116,7 +108,7 @@ function AdminBookings({ bookings = [], searchQuery = "" }) {
     const pnr = booking.pnr || "PBK" + String(bId).replace(/\D/g, "");
     const pName = booking.passenger?.name || booking.name || "Customer";
     const pPhone = booking.passenger?.mobile || booking.mobile || "N/A";
-    const pEmail = booking.passenger?.email || booking.userEmail || "N/A";
+
     const busName = booking.bus?.name || "BusVista Premium Coach";
     const busType = booking.bus?.type || "AC Sleeper (2+1)";
     const fromCity = booking.bus?.from || "Origin";

@@ -2,13 +2,9 @@ import {
   collection,
   doc,
   setDoc,
-  getDocs,
   onSnapshot,
   updateDoc,
   deleteDoc,
-  query,
-  orderBy,
-  limit,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import busData from "../data/busData";
@@ -750,7 +746,9 @@ export const updateBookingStatusInFirestore = async (bookingId, newStatus, userI
           status: "Refunded",
           lastUpdated: new Date().toISOString(),
         });
-      } catch (pe) {}
+      } catch (paymentError) {
+        console.warn("Unable to update the related payment status:", paymentError);
+      }
     }
 
     if (userId) {

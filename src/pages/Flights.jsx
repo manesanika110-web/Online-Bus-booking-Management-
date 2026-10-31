@@ -1,19 +1,13 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import {
   FaPlane,
-  FaMapMarkerAlt,
-  FaCalendarAlt,
   FaSearch,
   FaExchangeAlt,
-  FaCheckCircle,
-  FaPlaneDeparture,
-  FaPlaneArrival,
   FaSuitcase,
   FaShieldAlt,
-  FaArrowRight,
 } from "react-icons/fa";
 import { successAlert, errorAlert } from "../utils/alert";
 import { auth } from "../firebase";
@@ -79,6 +73,11 @@ const sampleFlights = [
   },
 ];
 
+const createFlightBookingIds = () => ({
+  pnr: `FLT${Math.floor(100000 + Math.random() * 900000)}`,
+  bookingId: `FBK${Math.floor(100000 + Math.random() * 900000)}`,
+});
+
 const Flights = () => {
   const navigate = useNavigate();
 
@@ -94,8 +93,7 @@ const Flights = () => {
   };
 
   const handleBookFlight = async (flight) => {
-    const pnr = "FLT" + Math.floor(100000 + Math.random() * 900000);
-    const bookingId = "FBK" + Math.floor(100000 + Math.random() * 900000);
+    const { pnr, bookingId } = createFlightBookingIds();
 
     const newFlightBooking = {
       bookingId,

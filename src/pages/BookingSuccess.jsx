@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import  { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import "jspdf";
+import "html2canvas";
 import {
   FaCheckCircle,
   FaBus,
   FaArrowRight,
-  FaPrint,
   FaHome,
   FaTicketAlt,
   FaQrcode,
@@ -14,9 +13,7 @@ import {
   FaUser,
   FaCalendarAlt,
   FaMapMarkerAlt,
-  FaClock,
   FaPhoneAlt,
-  FaDownload,
   FaInfoCircle,
 } from "react-icons/fa";
 import { auth } from "../firebase";
@@ -50,7 +47,7 @@ function BookingSuccess() {
   const ticketRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const [downloading, setDownloading] = useState(false);
+
   const [fallbackIds] = useState(() => {
     const timestamp = Date.now();
     return { bookingId: `BUS${timestamp}`, pnr: `PBK${timestamp}` };
@@ -151,53 +148,9 @@ function BookingSuccess() {
   ]);
 
   // Professional PDF Download
-  const handleDownloadPDF = async () => {
-    const input = ticketRef.current;
-    if (!input) return;
-    setDownloading(true);
 
-    try {
-      const canvas = await html2canvas(input, {
-        scale: 3,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        allowTaint: true,
-      });
 
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4",
-      });
 
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 10;
-      const imgWidth = pageWidth - margin * 2;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let y = margin;
-      if (imgHeight > pageHeight - margin * 2) {
-        const scale = (pageHeight - margin * 2) / imgHeight;
-        pdf.addImage(imgData, "PNG", margin, margin, imgWidth * scale, imgHeight * scale);
-      } else {
-        pdf.addImage(imgData, "PNG", margin, y, imgWidth, imgHeight);
-      }
-
-      const passengerName = passenger?.name ? passenger.name.replace(/\s+/g, "_") : "Passenger";
-      pdf.save(`BusVista_Ticket_${pnr}_${passengerName}.pdf`);
-    } catch (err) {
-      console.error("PDF download error:", err);
-    } finally {
-      setDownloading(false);
-    }
-  };
-
-  const handlePrint = () => {
-    window.print();
-  };
 
   return (
     <div className="dynamic-booking-success-page">

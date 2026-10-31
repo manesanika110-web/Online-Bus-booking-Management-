@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import  { useState, useEffect } from "react";
 import {
   FaTimes,
   FaSearch,
@@ -7,12 +6,9 @@ import {
   FaMapMarkerAlt,
   FaCalendarAlt,
   FaCheckCircle,
-  FaExclamationCircle,
   FaPhoneAlt,
   FaTachometerAlt,
   FaClock,
-  FaRoute,
-  FaShieldAlt,
   FaSyncAlt,
   FaCompass,
   FaLayerGroup,
@@ -62,18 +58,20 @@ const sampleTrackBookings = [
 ];
 
 const TrackTicketModal = ({ isOpen, onClose }) => {
-  const navigate = useNavigate();
+
 
   const [ticketQuery, setTicketQuery] = useState("");
   const [activeTracking, setActiveTracking] = useState(null);
   const [mapType, setMapType] = useState("roadmap"); // 'roadmap' | 'satellite'
   const [zoomLevel, setZoomLevel] = useState(1);
-  const [isLiveSimulating, setIsLiveSimulating] = useState(true);
-  const [liveSeconds, setLiveSeconds] = useState(0);
+  const [, setLiveSeconds] = useState(0);
 
   // Load initial active booking on open
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) return;
+    let active = true;
+    queueMicrotask(() => {
+      if (!active) return;
       const savedBookings = JSON.parse(localStorage.getItem("bookings")) || [];
       if (savedBookings.length > 0) {
         const latest = savedBookings[savedBookings.length - 1];
@@ -98,7 +96,10 @@ const TrackTicketModal = ({ isOpen, onClose }) => {
       } else {
         setActiveTracking(sampleTrackBookings[0]);
       }
-    }
+    });
+    return () => {
+      active = false;
+    };
   }, [isOpen]);
 
   // Live seconds ticker

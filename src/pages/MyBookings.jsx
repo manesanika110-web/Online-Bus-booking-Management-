@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import  { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import TrackTicketModal from "../components/TrackTicketModal";
@@ -13,20 +13,15 @@ import {
   FaPlane,
   FaMapMarkerAlt,
   FaCalendarAlt,
-  FaTicketAlt,
   FaCheckCircle,
   FaTimesCircle,
   FaPrint,
   FaDownload,
   FaBan,
-  FaTrashAlt,
   FaArrowRight,
   FaUser,
-  FaShieldAlt,
   FaExclamationTriangle,
   FaUserFriends,
-  FaSuitcase,
-  FaClock,
   FaTimes,
 } from "react-icons/fa";
 import { auth, db } from "../firebase";
@@ -59,7 +54,7 @@ const MyBookings = () => {
   const [hotelBookings, setHotelBookings] = useState([]);
   const [trainBookings, setTrainBookings] = useState([]);
   const [flightBookings, setFlightBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   const [trackPnr, setTrackPnr] = useState(null);
   const [cancelModalItem, setCancelModalItem] = useState(null);
@@ -176,12 +171,10 @@ const MyBookings = () => {
     return busBookings.filter((b) => {
       const status = (b.status || "upcoming").toLowerCase();
 
-      let matchesTab = false;
-      if (activeStatusTab === "all") {
-        matchesTab = status !== "cancelled";
-      } else {
-        matchesTab = status === activeStatusTab;
-      }
+      const matchesTab =
+        activeStatusTab === "all"
+          ? status !== "cancelled"
+          : status === activeStatusTab;
 
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch =
@@ -201,12 +194,10 @@ const MyBookings = () => {
   const getFilteredList = (list) => {
     return list.filter((item) => {
       const status = (item.status || "upcoming").toLowerCase();
-      let matchesTab = false;
-      if (activeStatusTab === "all") {
-        matchesTab = status !== "cancelled";
-      } else {
-        matchesTab = status === activeStatusTab;
-      }
+      const matchesTab =
+        activeStatusTab === "all"
+          ? status !== "cancelled"
+          : status === activeStatusTab;
 
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch =

@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from "react";
+import  { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaCheckCircle, FaCheck } from "react-icons/fa";
+import {  FaCheck } from "react-icons/fa";
 import "../css/InCardSeatSelection.css";
 
-const InCardSeatSelection = ({ bus, travelDate, onClose, onProceedBooking }) => {
+const InCardSeatSelection = ({ bus, travelDate, onProceedBooking }) => {
   const navigate = useNavigate();
 
   // Base price for this bus
