@@ -15,7 +15,7 @@ const AboutUs = () => {
         <h4>About Us</h4>
         <div className="image-placeholder-box">
           <img
-            src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=500&q=80"
+            src="/images/photo-1544620347-c4fd4a3d5957.jpg"
             alt="Bus"
           />
         </div>

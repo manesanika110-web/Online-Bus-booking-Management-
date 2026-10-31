@@ -1444,6 +1444,26 @@
   gap: 14px;
 }
 
+.admin-bus-product-image {
+  width: 100%;
+  height: 150px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #f1f5f9;
+}
+
+.admin-bus-image-upload {
+  margin-bottom: 18px;
+}
+
+.admin-bus-image-preview {
+  width: min(100%, 360px);
+  height: 160px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #f1f5f9;
+}
+
 .bus-card-head,
 .route-card-header {
   display: flex;
@@ -3023,3 +3043,155 @@
   animation: pulse-live 1.8s infinite;
 }
 
+@media (max-width: 768px) {
+  .admin-navbar {
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  .navbar-left {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .navbar-search-wrapper {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .navbar-right {
+    gap: 8px;
+  }
+
+  .admin-page-heading {
+    min-width: 0;
+  }
+
+  .admin-current-title {
+    font-size: 16px;
+  }
+
+  .admin-current-subtitle {
+    display: none;
+  }
+
+  .admin-live-badge {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .admin-content-canvas {
+    padding: 18px 14px;
+  }
+
+  .admin-subview-header,
+  .subview-header-right {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .subview-header-right {
+    display: flex;
+    gap: 10px;
+  }
+
+  .filter-button-group {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .filter-tab-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .admin-buses-grid,
+  .admin-routes-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-card-table-wrapper,
+  .admin-table-container {
+    max-width: 100%;
+  }
+
+  .admin-modal-backdrop {
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 12px;
+  }
+
+  .admin-modal-box,
+  .admin-modal-box.modal-lg {
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+  }
+
+  .admin-modal-form {
+    padding: 18px;
+  }
+
+  .modal-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form-group.full-width {
+    grid-column: auto;
+  }
+
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 12px;
+  }
+
+  .dashboard-chart-card,
+  .dashboard-donut-card,
+  .dashboard-table-card,
+  .dashboard-routes-card,
+  .live-corridor-radar-card {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-page-heading {
+    display: none;
+  }
+
+  .admin-live-badge {
+    display: none;
+  }
+
+  .admin-content-canvas {
+    padding: 14px 10px;
+  }
+
+  .admin-buses-grid,
+  .admin-routes-grid,
+  .dashboard-stats-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-bus-card,
+  .admin-route-card {
+    padding: 14px;
+  }
+
+  .admin-modal-backdrop {
+    padding: 8px;
+  }
+
+  .admin-modal-box,
+  .admin-modal-box.modal-lg {
+    max-height: calc(100dvh - 16px);
+  }
+
+  .modal-box-header {
+    padding: 14px 16px;
+  }
+}

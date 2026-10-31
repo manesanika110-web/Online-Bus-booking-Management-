@@ -11,6 +11,7 @@ import {
   FaWallet,
   FaMobileAlt,
 } from "react-icons/fa";
+import { savePendingBooking } from "../utils/localData";
 import "../css/PaymentModal.css";
 
 const PaymentModal = ({ isOpen, onClose, onBack, paymentData }) => {
@@ -75,7 +76,8 @@ const PaymentModal = ({ isOpen, onClose, onBack, paymentData }) => {
     // Simulate safe processing and redirect to booking success
     setTimeout(() => {
       setIsProcessing(false);
-      const bookingId = "BUS" + Math.floor(100000 + Math.random() * 900000);
+      const bookingId = `BUS${Date.now()}`;
+      const pnr = `PBK${Date.now()}`;
       const bookingDate = new Date().toLocaleDateString("en-IN", {
         day: "2-digit",
         month: "long",
@@ -91,19 +93,23 @@ const PaymentModal = ({ isOpen, onClose, onBack, paymentData }) => {
           ? `Net Banking (${selectedBank})`
           : `Wallet (${selectedWallet})`;
 
+      const bookingState = {
+        bus,
+        selectedSeats,
+        passenger,
+        boardingPoint,
+        droppingPoint,
+        travelDate,
+        totalAmount,
+        bookingId,
+        pnr,
+        bookingDate,
+        paymentMethod: selectedMethodName,
+      };
+      savePendingBooking({ ...paymentData, ...bookingState });
+
       navigate("/booking-success", {
-        state: {
-          bus,
-          selectedSeats,
-          passenger,
-          boardingPoint,
-          droppingPoint,
-          travelDate,
-          totalAmount,
-          bookingId,
-          bookingDate,
-          paymentMethod: selectedMethodName,
-        },
+        state: bookingState,
       });
     }, 1200);
   };

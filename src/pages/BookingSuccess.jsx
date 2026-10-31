@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -19,56 +19,70 @@ import {
   FaDownload,
   FaInfoCircle,
 } from "react-icons/fa";
-import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { auth } from "../firebase";
+import { persistBooking, readPendingBooking } from "../utils/localData";
 import BusVistaLogo from "../components/BusVistaLogo";
 import "../css/BookingSuccess.css";
+
+const DEFAULT_BUS = {
+  name: "SRS Travels Superfast",
+  type: "Non AC Seater / Sleeper (2 + 2)",
+  from: "Sangli",
+  to: "Goa",
+  departure: "08:15 PM",
+  arrival: "04:30 AM",
+  duration: "08h 15m",
+};
+
+const DEFAULT_PASSENGER = {
+  name: "Piyu",
+  mobile: "9876543210",
+  email: "piyu@gmail.com",
+  age: "24",
+  gender: "Female",
+};
+
+const DEFAULT_BOARDING_POINT = { location: "Sangli Stand / Vishrambag" };
+const DEFAULT_DROPPING_POINT = { location: "Goa ST Stand / Mapusa" };
+const DEFAULT_SEATS = ["B3"];
 
 function BookingSuccess() {
   const ticketRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const [downloading, setDownloading] = useState(false);
+  const [fallbackIds] = useState(() => {
+    const timestamp = Date.now();
+    return { bookingId: `BUS${timestamp}`, pnr: `PBK${timestamp}` };
+  });
+  const [fallbackBookingDate] = useState(() =>
+    new Date().toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    }),
+  );
 
   // Safely extract booking info
-  const state = location.state || {};
+  const state = useMemo(
+    () => location.state || readPendingBooking() || {},
+    [location.state],
+  );
   const {
-    bus = {
-      name: "SRS Travels Superfast",
-      type: "Non AC Seater / Sleeper (2 + 2)",
-      from: "Sangli",
-      to: "Goa",
-      departure: "08:15 PM",
-      arrival: "04:30 AM",
-      duration: "08h 15m",
-    },
-    passenger = {
-      name: "Piyu",
-      mobile: "9876543210",
-      email: "piyu@gmail.com",
-      age: "24",
-      gender: "Female",
-    },
-    selectedSeats = ["B3"],
-    boardingPoint = { location: "Sangli Stand / Vishrambag" },
-    droppingPoint = { location: "Goa ST Stand / Mapusa" },
+    bus = DEFAULT_BUS,
+    passenger = DEFAULT_PASSENGER,
+    selectedSeats = DEFAULT_SEATS,
+    boardingPoint = DEFAULT_BOARDING_POINT,
+    droppingPoint = DEFAULT_DROPPING_POINT,
     totalAmount = 650,
-    bookingId = "BUS" + Math.floor(100000 + Math.random() * 900000),
-    bookingDate = new Date().toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    }),
-    travelDate = new Date().toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    }),
-    pnr = "PBK" + Math.floor(100000 + Math.random() * 900000),
+    bookingId = fallbackIds.bookingId,
+    bookingDate = fallbackBookingDate,
+    travelDate = fallbackBookingDate,
+    pnr = fallbackIds.pnr,
     paymentMethod = state.paymentMethod || "UPI",
   } = state;
 
-  // Save to localStorage and Firestore
+  // Save locally first so the booking remains available if the network is down.
   useEffect(() => {
     const saveBookingData = async () => {
       const user = auth?.currentUser;
@@ -96,65 +110,45 @@ function BookingSuccess() {
         })
       );
 
-      if (uid) {
-        const userKey = `bookings_${uid}`;
-        const userBookings = JSON.parse(localStorage.getItem(userKey)) || [];
-        const exists = userBookings.some((item) => item.bookingId === bookingId);
-        if (!exists) {
-          userBookings.unshift(cleanData);
-          localStorage.setItem(userKey, JSON.stringify(userBookings));
-        }
+      const paymentId = "PAY_" + cleanData.bookingId;
+      const payment = {
+        transactionId: paymentId,
+        paymentId,
+        bookingId: cleanData.bookingId,
+        pnr: cleanData.pnr,
+        passengerName: cleanData.passenger?.name || "Customer",
+        email: cleanData.userEmail || "",
+        mobile: cleanData.passenger?.mobile || "",
+        amount: cleanData.totalAmount,
+        method: paymentMethod,
+        status: "Success",
+        timestamp: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+      };
+
+      const result = await persistBooking(cleanData, "buses", payment);
+      if (!result.localSaved) {
+        console.error("Booking could not be cached in browser storage.");
       }
-
-      const oldBookings = JSON.parse(localStorage.getItem("bookings")) || [];
-      const alreadyExists = oldBookings.some((item) => item.bookingId === bookingId);
-      if (!alreadyExists) {
-        oldBookings.unshift(cleanData);
-        localStorage.setItem("bookings", JSON.stringify(oldBookings));
-      }
-
-      if (db) {
-        try {
-          // 1. Top-level bookings collection for real-time admin sync
-          await setDoc(doc(db, "bookings", String(cleanData.bookingId)), cleanData, {
-            merge: true,
-          });
-
-          // 2. Top-level payments collection for financial auditing
-          const paymentId = "PAY_" + cleanData.bookingId;
-          await setDoc(
-            doc(db, "payments", paymentId),
-            {
-              transactionId: paymentId,
-              paymentId: paymentId,
-              bookingId: cleanData.bookingId,
-              pnr: cleanData.pnr,
-              passengerName: cleanData.passenger?.name || "Customer",
-              email: cleanData.userEmail || "",
-              mobile: cleanData.passenger?.mobile || "",
-              amount: cleanData.totalAmount,
-              method: paymentMethod,
-              status: "Success",
-              timestamp: new Date().toISOString(),
-              lastUpdated: new Date().toISOString(),
-            },
-            { merge: true }
-          );
-
-          // 3. User subcollection if logged in
-          if (user) {
-            await setDoc(doc(db, "users", user.uid, "bookings", cleanData.bookingId), cleanData, {
-              merge: true,
-            });
-          }
-        } catch (err) {
-          console.error("Error saving booking to Firestore:", err);
-        }
+      if (result.syncError) {
+        console.warn("Booking is saved locally and will need cloud synchronization.");
       }
     };
 
-    saveBookingData();
-  }, [bookingId]);
+    void saveBookingData();
+  }, [
+    boardingPoint,
+    bookingDate,
+    bookingId,
+    bus,
+    droppingPoint,
+    passenger,
+    paymentMethod,
+    pnr,
+    selectedSeats,
+    totalAmount,
+    travelDate,
+  ]);
 
   // Professional PDF Download
   const handleDownloadPDF = async () => {

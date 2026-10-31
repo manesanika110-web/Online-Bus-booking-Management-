@@ -12,6 +12,21 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import busData from "../data/busData";
+import { readStoredArray, writeStoredArray } from "../utils/localData";
+
+const BUS_CACHE_KEY = "admin_buses";
+
+const cacheBuses = (buses) => writeStoredArray(BUS_CACHE_KEY, buses);
+
+const upsertCachedBus = (bus) => {
+  const cachedBuses = readStoredArray(BUS_CACHE_KEY);
+  const busId = String(bus.id || bus.docId);
+  const nextBuses = cachedBuses.filter(
+    (cached) => String(cached.id || cached.docId) !== busId,
+  );
+  nextBuses.push(bus);
+  cacheBuses(nextBuses);
+};
 
 /**
  * Real-time Firestore service for BusVista Admin Panel
@@ -130,7 +145,8 @@ export const subscribeToUsers = (callback) => {
  */
 export const subscribeToBuses = (callback) => {
   if (!db) {
-    callback(busData);
+    const cached = readStoredArray(BUS_CACHE_KEY);
+    callback(cached.length ? cached : busData);
     return () => {};
   }
 
@@ -153,7 +169,8 @@ export const subscribeToBuses = (callback) => {
             await Promise.all(seedPromises);
           } catch (seedErr) {
             console.warn("Bus seed error:", seedErr);
-            callback(busData);
+            const cached = readStoredArray(BUS_CACHE_KEY);
+            callback(cached.length ? cached : busData);
             return;
           }
           callback(busData);
@@ -162,18 +179,21 @@ export const subscribeToBuses = (callback) => {
           snapshot.forEach((docSnap) => {
             busesList.push({ ...docSnap.data(), docId: docSnap.id });
           });
+          cacheBuses(busesList);
           callback(busesList);
         }
       },
       (error) => {
         console.warn("Buses onSnapshot error:", error);
-        callback(busData);
+        const cached = readStoredArray(BUS_CACHE_KEY);
+        callback(cached.length ? cached : busData);
       }
     );
     return unsubscribe;
   } catch (error) {
     console.error("subscribeToBuses error:", error);
-    callback(busData);
+    const cached = readStoredArray(BUS_CACHE_KEY);
+    callback(cached.length ? cached : busData);
     return () => {};
   }
 };
@@ -606,16 +626,18 @@ export const updateBusLocationInFirestore = async (locationId, locData) => {
  * Bus CRUD Actions
  */
 export const addBusToFirestore = async (busDataObj) => {
+  const newId = busDataObj.id || Date.now();
+  const busRecord = {
+    ...busDataObj,
+    id: newId,
+    status: busDataObj.status || "Active",
+    createdAt: new Date().toISOString(),
+  };
+  upsertCachedBus(busRecord);
   if (!db) return false;
   try {
-    const newId = busDataObj.id || Date.now();
     const docRef = doc(db, "buses", String(newId));
-    await setDoc(docRef, {
-      ...busDataObj,
-      id: newId,
-      status: busDataObj.status || "Active",
-      createdAt: new Date().toISOString(),
-    });
+    await setDoc(docRef, busRecord);
     return true;
   } catch (err) {
     console.error("addBus error:", err);
@@ -624,6 +646,11 @@ export const addBusToFirestore = async (busDataObj) => {
 };
 
 export const updateBusInFirestore = async (busId, updatedData) => {
+  const cachedBuses = readStoredArray(BUS_CACHE_KEY);
+  const existing = cachedBuses.find(
+    (bus) => String(bus.id || bus.docId) === String(busId),
+  );
+  upsertCachedBus({ ...existing, ...updatedData, id: busId });
   if (!db) return false;
   try {
     const docRef = doc(db, "buses", String(busId));
@@ -639,6 +666,11 @@ export const updateBusInFirestore = async (busId, updatedData) => {
 };
 
 export const deleteBusFromFirestore = async (busId) => {
+  cacheBuses(
+    readStoredArray(BUS_CACHE_KEY).filter(
+      (bus) => String(bus.id || bus.docId) !== String(busId),
+    ),
+  );
   if (!db) return false;
   try {
     const docRef = doc(db, "buses", String(busId));

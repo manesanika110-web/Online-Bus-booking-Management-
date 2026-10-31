@@ -30,8 +30,15 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { auth, db } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { successAlert } from "../utils/alert";
+import {
+  mergeRecords,
+  readStoredArray,
+  updateStoredBookingStatus,
+  writeStoredArray,
+} from "../utils/localData";
 import "../css/MyBookings.css";
 
 const MyBookings = () => {
@@ -59,146 +66,109 @@ const MyBookings = () => {
 
   // Load all bookings strictly for current authenticated user
   useEffect(() => {
-    const loadUserData = async () => {
+    let active = true;
+    let loadId = 0;
+    const loadUserData = async (currentUser = auth.currentUser) => {
+      const currentLoadId = ++loadId;
       setLoading(true);
-      const currentUser = auth.currentUser;
       const uid = currentUser?.uid;
       const userEmail = currentUser?.email?.toLowerCase().trim();
 
       if (!currentUser) {
-        setBusBookings([]);
-        setHotelBookings([]);
-        setTrainBookings([]);
-        setFlightBookings([]);
-        setLoading(false);
+        if (active && currentLoadId === loadId) {
+          setBusBookings([]);
+          setHotelBookings([]);
+          setTrainBookings([]);
+          setFlightBookings([]);
+          setLoading(false);
+        }
         return;
       }
 
-      // 1. Buses
-      let userBuses = [];
-      const userBusKey = `bookings_${uid}`;
-      const savedUserBuses = JSON.parse(localStorage.getItem(userBusKey));
+      const services = [
+        {
+          key: "bookings",
+          collection: "bookings",
+          genericKey: "bookings",
+          matches: (record) =>
+            record.userId === uid ||
+            (userEmail &&
+              record.passenger?.email?.toLowerCase().trim() === userEmail) ||
+            (userEmail && record.userEmail?.toLowerCase().trim() === userEmail),
+          set: setBusBookings,
+        },
+        {
+          key: "hotelBookings",
+          collection: "hotelBookings",
+          genericKey: "hotelBookings",
+          matches: (record) =>
+            record.userId === uid ||
+            (userEmail && record.userEmail?.toLowerCase().trim() === userEmail),
+          set: setHotelBookings,
+        },
+        {
+          key: "trainBookings",
+          collection: "trainBookings",
+          genericKey: "trainBookings",
+          matches: (record) =>
+            record.userId === uid ||
+            (userEmail && record.userEmail?.toLowerCase().trim() === userEmail),
+          set: setTrainBookings,
+        },
+        {
+          key: "flightBookings",
+          collection: "flightBookings",
+          genericKey: "flightBookings",
+          matches: (record) =>
+            record.userId === uid ||
+            (userEmail && record.userEmail?.toLowerCase().trim() === userEmail),
+          set: setFlightBookings,
+        },
+      ];
 
-      if (savedUserBuses && Array.isArray(savedUserBuses)) {
-        userBuses = savedUserBuses;
-      } else {
-        const genericBuses = JSON.parse(localStorage.getItem("bookings")) || [];
-        userBuses = genericBuses.filter(
-          (b) =>
-            b.userId === uid ||
-            (userEmail && b.passenger?.email?.toLowerCase().trim() === userEmail) ||
-            (userEmail && b.userEmail?.toLowerCase().trim() === userEmail)
+      try {
+        await Promise.all(
+          services.map(async (service) => {
+            const cached = mergeRecords(
+              readStoredArray(service.genericKey).filter(service.matches),
+              readStoredArray(`${service.key}_${uid}`),
+            );
+            let cloudRecords = [];
+            if (db) {
+              try {
+                const snapshot = await getDocs(
+                  collection(db, "users", uid, service.collection),
+                );
+                cloudRecords = snapshot.docs.map((docSnap) => ({
+                  ...docSnap.data(),
+                  bookingId: docSnap.id,
+                }));
+              } catch (error) {
+                console.warn(`Unable to load ${service.collection} from Firestore:`, error);
+              }
+            }
+
+            const records = mergeRecords(cached, cloudRecords);
+            if (!active || currentLoadId !== loadId) return;
+            service.set(records);
+            if (records.length) {
+              writeStoredArray(`${service.key}_${uid}`, records);
+            }
+          }),
         );
+      } finally {
+        if (active && currentLoadId === loadId) setLoading(false);
       }
-
-      if (db && uid) {
-        try {
-          const querySnapshot = await getDocs(
-            collection(db, "users", uid, "bookings")
-          );
-          const firestoreBuses = [];
-          querySnapshot.forEach((docSnap) => {
-            firestoreBuses.push({ ...docSnap.data(), bookingId: docSnap.id });
-          });
-          if (firestoreBuses.length > 0) {
-            userBuses = firestoreBuses;
-          }
-        } catch (e) {
-          console.log("Firestore bus bookings fetch:", e);
-        }
-      }
-      setBusBookings(userBuses);
-
-      // 2. Hotels
-      let userHotels = [];
-      const userHotelKey = `hotelBookings_${uid}`;
-      const savedUserHotels = JSON.parse(localStorage.getItem(userHotelKey));
-      if (savedUserHotels && Array.isArray(savedUserHotels)) {
-        userHotels = savedUserHotels;
-      } else {
-        const genericHotels = JSON.parse(localStorage.getItem("hotelBookings")) || [];
-        userHotels = genericHotels.filter(
-          (h) => h.userId === uid || (userEmail && h.userEmail === userEmail)
-        );
-      }
-      if (db && uid) {
-        try {
-          const hotelSnap = await getDocs(
-            collection(db, "users", uid, "hotelBookings")
-          );
-          const firestoreHotels = [];
-          hotelSnap.forEach((docSnap) => {
-            firestoreHotels.push({ ...docSnap.data(), bookingId: docSnap.id });
-          });
-          if (firestoreHotels.length > 0) userHotels = firestoreHotels;
-        } catch (e) {
-          console.log("Firestore hotel bookings fetch:", e);
-        }
-      }
-      setHotelBookings(userHotels);
-
-      // 3. Trains
-      let userTrains = [];
-      const userTrainKey = `trainBookings_${uid}`;
-      const savedUserTrains = JSON.parse(localStorage.getItem(userTrainKey));
-      if (savedUserTrains && Array.isArray(savedUserTrains)) {
-        userTrains = savedUserTrains;
-      } else {
-        const genericTrains = JSON.parse(localStorage.getItem("trainBookings")) || [];
-        userTrains = genericTrains.filter(
-          (t) => t.userId === uid || (userEmail && t.userEmail === userEmail)
-        );
-      }
-      if (db && uid) {
-        try {
-          const trainSnap = await getDocs(
-            collection(db, "users", uid, "trainBookings")
-          );
-          const firestoreTrains = [];
-          trainSnap.forEach((docSnap) => {
-            firestoreTrains.push({ ...docSnap.data(), bookingId: docSnap.id });
-          });
-          if (firestoreTrains.length > 0) userTrains = firestoreTrains;
-        } catch (e) {
-          console.log("Firestore train bookings fetch:", e);
-        }
-      }
-      setTrainBookings(userTrains);
-
-      // 4. Flights
-      let userFlights = [];
-      const userFlightKey = `flightBookings_${uid}`;
-      const savedUserFlights = JSON.parse(localStorage.getItem(userFlightKey));
-      if (savedUserFlights && Array.isArray(savedUserFlights)) {
-        userFlights = savedUserFlights;
-      } else {
-        const genericFlights = JSON.parse(localStorage.getItem("flightBookings")) || [];
-        userFlights = genericFlights.filter(
-          (f) => f.userId === uid || (userEmail && f.userEmail === userEmail)
-        );
-      }
-      if (db && uid) {
-        try {
-          const flightSnap = await getDocs(
-            collection(db, "users", uid, "flightBookings")
-          );
-          const firestoreFlights = [];
-          flightSnap.forEach((docSnap) => {
-            firestoreFlights.push({ ...docSnap.data(), bookingId: docSnap.id });
-          });
-          if (firestoreFlights.length > 0) userFlights = firestoreFlights;
-        } catch (e) {
-          console.log("Firestore flight bookings fetch:", e);
-        }
-      }
-      setFlightBookings(userFlights);
-
-      setLoading(false);
     };
 
-    loadUserData();
-    window.addEventListener("focus", loadUserData);
-    return () => window.removeEventListener("focus", loadUserData);
+    const unsubscribe = onAuthStateChanged(auth, loadUserData);
+    const refreshOnFocus = () => loadUserData(auth.currentUser);
+    window.addEventListener("focus", refreshOnFocus);
+    return () => {
+      active = false;
+      unsubscribe();
+      window.removeEventListener("focus", refreshOnFocus);
+    };
   }, []);
 
   // Filter Logic for Buses
@@ -272,6 +242,32 @@ const MyBookings = () => {
   const confirmCancelAction = async (bookingId) => {
     const currentUser = auth.currentUser;
     const uid = currentUser?.uid;
+    const activeList = {
+      buses: busBookings,
+      hotels: hotelBookings,
+      trains: trainBookings,
+      flights: flightBookings,
+    }[activeService] || [];
+    const booking = activeList.find(
+      (record) => String(record.bookingId || record.id) === String(bookingId),
+    );
+    if (!booking) {
+      await successAlert("Booking details could not be found. Please reload and try again.");
+      return;
+    }
+
+    if (
+      !updateStoredBookingStatus(
+        { ...booking, bookingId, userId: uid || booking.userId },
+        activeService,
+        "cancelled",
+      )
+    ) {
+      await successAlert("Could not save this cancellation locally. Please retry.");
+      return;
+    }
+
+    let remoteSyncFailed = false;
 
     if (activeService === "buses") {
       const updated = busBookings.map((b) =>
@@ -290,14 +286,17 @@ const MyBookings = () => {
               status: "Refunded",
               lastUpdated: new Date().toISOString(),
             });
-          } catch (pe) {}
+          } catch (error) {
+            console.warn("Unable to update the bus payment status:", error);
+            remoteSyncFailed = true;
+          }
         } catch (be) {
-          console.log("Top-level booking cancel update error:", be);
+          console.warn("Top-level booking cancel update error:", be);
+          remoteSyncFailed = true;
         }
       }
 
       if (uid) {
-        localStorage.setItem(`bookings_${uid}`, JSON.stringify(updated));
         if (db) {
           try {
             await updateDoc(doc(db, "users", uid, "bookings", bookingId), {
@@ -305,7 +304,8 @@ const MyBookings = () => {
               lastUpdated: new Date().toISOString(),
             });
           } catch (e) {
-            console.log(e);
+            console.warn("Unable to update the user bus booking:", e);
+            remoteSyncFailed = true;
           }
         }
       }
@@ -321,11 +321,13 @@ const MyBookings = () => {
             status: "cancelled",
             lastUpdated: new Date().toISOString(),
           });
-        } catch (be) {}
+        } catch (error) {
+          console.warn("Unable to update the hotel booking:", error);
+          remoteSyncFailed = true;
+        }
       }
 
       if (uid) {
-        localStorage.setItem(`hotelBookings_${uid}`, JSON.stringify(updated));
         if (db) {
           try {
             await updateDoc(doc(db, "users", uid, "hotelBookings", bookingId), {
@@ -333,7 +335,8 @@ const MyBookings = () => {
               lastUpdated: new Date().toISOString(),
             });
           } catch (e) {
-            console.log(e);
+            console.warn("Unable to update the user hotel booking:", e);
+            remoteSyncFailed = true;
           }
         }
       }
@@ -348,10 +351,10 @@ const MyBookings = () => {
             status: "cancelled",
             lastUpdated: new Date().toISOString(),
           });
-        } catch (be) {}
-      }
-      if (uid) {
-        localStorage.setItem(`trainBookings_${uid}`, JSON.stringify(updated));
+        } catch (error) {
+          console.warn("Unable to update the train booking:", error);
+          remoteSyncFailed = true;
+        }
       }
     } else if (activeService === "flights") {
       const updated = flightBookings.map((f) =>
@@ -364,15 +367,19 @@ const MyBookings = () => {
             status: "cancelled",
             lastUpdated: new Date().toISOString(),
           });
-        } catch (be) {}
-      }
-      if (uid) {
-        localStorage.setItem(`flightBookings_${uid}`, JSON.stringify(updated));
+        } catch (error) {
+          console.warn("Unable to update the flight booking:", error);
+          remoteSyncFailed = true;
+        }
       }
     }
 
     setCancelModalItem(null);
-    await successAlert(`Booking (${bookingId}) has been cancelled successfully.`);
+    await successAlert(
+      remoteSyncFailed
+        ? "Cancellation saved on this device. Cloud sync is currently unavailable."
+        : `Booking (${bookingId}) has been cancelled successfully.`,
+    );
   };
 
   const handlePrintTicket = (item) => {

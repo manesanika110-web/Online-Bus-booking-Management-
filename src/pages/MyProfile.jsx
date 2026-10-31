@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { auth, db } from "../firebase";
 import { onAuthStateChanged, updateProfile, updatePassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { imageDataUrlToFile, uploadImage } from "../utils/imageStorage";
+import { readStoredObject, writeStoredObject } from "../utils/localData";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -32,6 +34,7 @@ const MyProfile = () => {
   const [mobile, setMobile] = useState("");
   const [gender, setGender] = useState("Male");
   const [profilePhoto, setProfilePhoto] = useState("");
+  const [profilePhotoFile, setProfilePhotoFile] = useState(null);
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -39,19 +42,35 @@ const MyProfile = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  useEffect(
+    () => () => {
+      if (profilePhoto.startsWith("blob:")) URL.revokeObjectURL(profilePhoto);
+    },
+    [profilePhoto],
+  );
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
 
       if (currentUser) {
-        setFullName(currentUser.displayName || localStorage.getItem("userName") || "");
+        const cachedProfile = readStoredObject(`profile_${currentUser.uid}`) || {};
+        setFullName(
+          cachedProfile.fullName ||
+            localStorage.getItem("userName") ||
+            currentUser.displayName ||
+            "",
+        );
         setEmail(currentUser.email || "");
 
         const savedAvatar =
+          cachedProfile.profilePhoto ||
           localStorage.getItem("profilePhoto") ||
           currentUser.photoURL ||
           "";
         setProfilePhoto(savedAvatar);
+        setMobile(cachedProfile.mobile || localStorage.getItem("userMobile") || "");
+        setGender(cachedProfile.gender || localStorage.getItem("userGender") || "Male");
 
         if (db) {
           try {
@@ -59,12 +78,17 @@ const MyProfile = () => {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
               const data = docSnap.data();
-              if (data.mobile) setMobile(data.mobile);
-              if (data.gender) setGender(data.gender);
-              if (data.profilePhoto) setProfilePhoto(data.profilePhoto);
+              const cloudTime = new Date(data.updatedAt || 0).getTime();
+              const cacheTime = new Date(cachedProfile.updatedAt || 0).getTime();
+              if (cloudTime >= cacheTime) {
+                if (data.fullName || data.name) setFullName(data.fullName || data.name);
+                if (data.mobile) setMobile(data.mobile);
+                if (data.gender) setGender(data.gender);
+                if (data.profilePhoto) setProfilePhoto(data.profilePhoto);
+              }
             }
           } catch (e) {
-            console.log(e);
+            console.warn("Unable to load the saved profile:", e);
           }
         }
       }
@@ -80,15 +104,13 @@ const MyProfile = () => {
         errorAlert("File size should not exceed 5MB.");
         return;
       }
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProfilePhoto(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setProfilePhotoFile(file);
+      setProfilePhoto(URL.createObjectURL(file));
     }
   };
 
   const handleRemovePhoto = () => {
+    setProfilePhotoFile(null);
     setProfilePhoto("");
   };
 
@@ -117,10 +139,37 @@ const MyProfile = () => {
         }
       }
 
+      let savedPhoto = profilePhoto;
       if (user) {
+        const uploadFile =
+          profilePhotoFile ||
+          (profilePhoto.startsWith("data:image/")
+            ? imageDataUrlToFile(profilePhoto, "profile-photo")
+            : null);
+        savedPhoto = uploadFile
+          ? await uploadImage(
+              uploadFile,
+              `profiles/${user.uid}/avatar-${Date.now()}`,
+            )
+          : profilePhoto;
+
+        localStorage.setItem("userName", fullName.trim());
+        localStorage.setItem("userMobile", mobile.trim());
+        localStorage.setItem("userGender", gender);
+        if (savedPhoto) localStorage.setItem("profilePhoto", savedPhoto);
+        else localStorage.removeItem("profilePhoto");
+        writeStoredObject(`profile_${user.uid}`, {
+          fullName: fullName.trim(),
+          email: user.email,
+          mobile: mobile.trim(),
+          gender,
+          profilePhoto: savedPhoto || "",
+          updatedAt: new Date().toISOString(),
+        });
+
         await updateProfile(user, {
           displayName: fullName.trim(),
-          photoURL: profilePhoto || "",
+          photoURL: savedPhoto || "",
         });
 
         if (db) {
@@ -133,21 +182,13 @@ const MyProfile = () => {
               email: user.email,
               mobile: mobile.trim(),
               gender,
-              profilePhoto: profilePhoto || "",
+              profilePhoto: savedPhoto || "",
               updatedAt: new Date().toISOString(),
             },
             { merge: true }
           );
         }
       }
-
-      localStorage.setItem("userName", fullName.trim());
-      if (profilePhoto) {
-        localStorage.setItem("profilePhoto", profilePhoto);
-      } else {
-        localStorage.removeItem("profilePhoto");
-      }
-      localStorage.setItem("userMobile", mobile.trim());
 
       window.dispatchEvent(new Event("profileUpdated"));
       window.dispatchEvent(new Event("storage"));

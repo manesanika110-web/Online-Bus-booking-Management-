@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { savePendingBooking } from "../utils/localData";
 import "../css/Payment.css";
 
 function Payment() {
@@ -69,13 +70,37 @@ function Payment() {
         ? "Net Banking"
         : "Wallet";
 
+    const bookingDate = new Date().toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+    const bookingId = `BUS${Date.now()}`;
+    const pnr = `PBK${Date.now()}`;
+    savePendingBooking({
+      ...state,
+      bookingId,
+      pnr,
+      bookingDate,
+      travelDate: state.travelDate || state.date || bookingDate,
+      bus,
+      selectedSeats,
+      passenger,
+      totalAmount,
+      paymentMethod: methodLabel,
+    });
+
     navigate("/booking-success", {
       state: {
+        ...state,
         bus,
         selectedSeats,
         passenger,
         totalAmount,
         paymentMethod: methodLabel,
+        bookingId,
+        pnr,
+        bookingDate,
       },
     });
   };
@@ -238,21 +263,21 @@ function Payment() {
             <div className="payment-box">
               <button type="button" className="wallet-btn">
                 <img
-                  src="https://cdn.simpleicons.org/phonepe/ffffff"
+                  src="/images/phonepe.svg"
                   alt="PhonePe"
                 />
                 PhonePe
               </button>
               <button type="button" className="wallet-btn">
                 <img
-                  src="https://cdn.simpleicons.org/googlepay/ffffff"
+                  src="/images/googlepay.svg"
                   alt="Google Pay"
                 />
                 Google Pay
               </button>
               <button type="button" className="wallet-btn">
                 <img
-                  src="https://cdn.simpleicons.org/paytm/ffffff"
+                  src="/images/paytm.svg"
                   alt="Paytm"
                 />
                 Paytm

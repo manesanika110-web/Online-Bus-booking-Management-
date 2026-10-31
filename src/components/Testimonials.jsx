@@ -25,7 +25,7 @@ const defaultReviews = [
     comment:
       "Super smooth booking experience! The live bus tracking feature made boarding effortless at Swargate. Clean AC sleeper bus.",
     avatar:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80",
+      "/images/photo-1535713875002-d1d0cf377fde.jpg",
   },
   {
     id: "rev_2",
@@ -36,7 +36,7 @@ const defaultReviews = [
     comment:
       "Best bus ticketing website! Got 20% discount code and received M-ticket directly on WhatsApp. Highly recommended!",
     avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80",
+      "/images/photo-1494790108377-be9c29b29330.jpg",
   },
   {
     id: "rev_3",
@@ -47,7 +47,7 @@ const defaultReviews = [
     comment:
       "I had to cancel a ticket due to an emergency and the refund was processed instantly back to my UPI within 2 minutes. Excellent customer care.",
     avatar:
-      "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80",
+      "/images/photo-1570295999919-56ceb5ecca61.jpg",
   },
 ];
 
@@ -127,7 +127,7 @@ const Testimonials = () => {
     const avatarUrl =
       currentUser?.photoURL ||
       localStorage.getItem("profilePhoto") ||
-      `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=d84e55&color=fff`;
+      "/images/avatar-placeholder.svg";
 
     const newReview = {
       id: `REV_${Date.now()}`,
@@ -195,7 +195,7 @@ const Testimonials = () => {
                 alt={rev.name}
                 className="reviewer-avatar-img"
                 onError={(e) => {
-                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(rev.name)}&background=d84e55&color=fff`;
+                  e.target.src = "/images/avatar-placeholder.svg";
                 }}
               />
               <div className="reviewer-info">

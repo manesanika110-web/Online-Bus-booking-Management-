@@ -2,6 +2,7 @@
 
 .seat-page{
     max-width:1100px;
+    width:100%;
     margin:40px auto;
     padding:20px;
 }
@@ -29,7 +30,7 @@
 /* Seat Layout*/
 
 .seat-layout{
-    width:320px;
+    width:min(320px, 100%);
     margin:0 auto;
     display:grid;
     grid-template-columns:repeat(4,60px);
@@ -73,7 +74,7 @@
 /* Summary*/
 
 .seat-summary{
-    width:320px;
+    width:min(320px, 100%);
     margin:35px auto 0;
 }
 
@@ -92,7 +93,7 @@
 /* Buttons */
 
 .seat-buttons{
-    width:320px;
+    width:min(320px, 100%);
     margin:35px auto 0;
     display:flex;
     justify-content:space-between;
@@ -143,7 +144,7 @@
 /* ===== Legend ===== */
 
 .seat-legend{
-    width:320px;
+    width:min(320px, 100%);
     margin:0 auto 30px;
     display:flex;
     justify-content:space-between;

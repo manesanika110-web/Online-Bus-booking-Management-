@@ -6,6 +6,7 @@ import "../css/CancelBooking.css";
 import { auth, db } from "../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { successAlert, errorAlert } from "../utils/alert";
+import { updateStoredBookingStatus } from "../utils/localData";
 
 const CancelBooking = () => {
   const location = useLocation();
@@ -31,6 +32,17 @@ const CancelBooking = () => {
     const user = auth?.currentUser;
     const uid = user?.uid || bookingData.userId;
 
+    const localSaved = updateStoredBookingStatus(
+      { ...bookingData, bookingId, userId: uid },
+      "buses",
+      "cancelled",
+    );
+    if (!localSaved) {
+      errorAlert("The cancellation could not be saved locally. Please retry.");
+      return;
+    }
+
+    let remoteSyncFailed = false;
     if (db && bookingId) {
       try {
         await updateDoc(doc(db, "bookings", String(bookingId)), {
@@ -45,7 +57,10 @@ const CancelBooking = () => {
             status: "Refunded",
             lastUpdated: new Date().toISOString(),
           });
-        } catch (pe) {}
+        } catch (paymentError) {
+          console.warn("Unable to update the payment status:", paymentError);
+          remoteSyncFailed = true;
+        }
 
         if (uid) {
           try {
@@ -53,34 +68,22 @@ const CancelBooking = () => {
               status: "cancelled",
               lastUpdated: new Date().toISOString(),
             });
-          } catch (ue) {}
+          } catch (userBookingError) {
+            console.warn("Unable to update the user booking:", userBookingError);
+            remoteSyncFailed = true;
+          }
         }
       } catch (err) {
         console.error("Firestore cancellation error:", err);
+        remoteSyncFailed = true;
       }
     }
 
-    const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
-    const updatedBookings = bookings.map((item) => {
-      if (item.bookingId === bookingData.bookingId) {
-        return {
-          ...item,
-          status: "cancelled",
-        };
-      }
-      return item;
-    });
-    localStorage.setItem("bookings", JSON.stringify(updatedBookings));
-
-    if (uid) {
-      const userBookings = JSON.parse(localStorage.getItem(`bookings_${uid}`)) || [];
-      const updatedUser = userBookings.map((item) =>
-        item.bookingId === bookingData.bookingId ? { ...item, status: "cancelled" } : item
-      );
-      localStorage.setItem(`bookings_${uid}`, JSON.stringify(updatedUser));
-    }
-
-    await successAlert(`Your ticket (PNR: ${bookingData.pnr}) has been cancelled successfully!`);
+    await successAlert(
+      remoteSyncFailed
+        ? `Cancellation saved on this device. Cloud sync is currently unavailable.`
+        : `Your ticket (PNR: ${bookingData.pnr}) has been cancelled successfully!`,
+    );
     navigate("/my-bookings", { replace: true });
   };
 

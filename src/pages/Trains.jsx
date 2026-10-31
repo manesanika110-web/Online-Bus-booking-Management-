@@ -14,9 +14,9 @@ import {
   FaShieldAlt,
   FaArrowRight,
 } from "react-icons/fa";
-import { successAlert } from "../utils/alert";
-import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { successAlert, errorAlert } from "../utils/alert";
+import { auth } from "../firebase";
+import { persistBooking } from "../utils/localData";
 import "../css/Trains.css";
 
 const sampleTrains = [
@@ -99,7 +99,7 @@ const Trains = () => {
     setToStation(temp);
   };
 
-  const handleBookTrain = (train, cls) => {
+  const handleBookTrain = async (train, cls) => {
     const pnr = "TRN" + Math.floor(1000000000 + Math.random() * 9000000000).toString().slice(0, 10);
     const bookingId = "TBK" + Math.floor(100000 + Math.random() * 900000);
 
@@ -129,42 +129,38 @@ const Trains = () => {
     newTrainBooking.userId = uid;
     newTrainBooking.userEmail = userEmail;
 
-    const saved = JSON.parse(localStorage.getItem("trainBookings")) || [];
-    saved.push(newTrainBooking);
-    localStorage.setItem("trainBookings", JSON.stringify(saved));
-
-    if (db) {
-      try {
-        setDoc(doc(db, "bookings", bookingId), newTrainBooking, { merge: true });
-        const paymentId = "PAY_" + bookingId;
-        setDoc(
-          doc(db, "payments", paymentId),
-          {
-            transactionId: paymentId,
-            paymentId: paymentId,
-            bookingId,
-            pnr,
-            passengerName: user?.displayName || "Customer",
-            email: userEmail,
-            amount: cls.fare,
-            method: "UPI",
-            status: "Success",
-            timestamp: new Date().toISOString(),
-            lastUpdated: new Date().toISOString(),
-          },
-          { merge: true }
-        );
-        if (uid) {
-          setDoc(doc(db, "users", uid, "trainBookings", bookingId), newTrainBooking);
-        }
-      } catch (e) {
-        console.log(e);
-      }
+    const paymentId = "PAY_" + bookingId;
+    let result;
+    try {
+      result = await persistBooking(newTrainBooking, "trains", {
+        transactionId: paymentId,
+        paymentId,
+        bookingId,
+        pnr,
+        passengerName: user?.displayName || "Customer",
+        email: userEmail,
+        amount: cls.fare,
+        method: "UPI",
+        status: "Success",
+        timestamp: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (error) {
+      await errorAlert(error.message || "Unable to save this train booking.");
+      return;
     }
 
-    successAlert(`Train ticket booked on ${train.trainName}! PNR: ${pnr}`).then(() => {
-      navigate("/my-bookings", { state: { activeService: "trains" } });
-    });
+    if (!result.localSaved && !result.remoteSaved) {
+      await errorAlert("Unable to save this train booking. Please try again.");
+      return;
+    }
+
+    await successAlert(
+      result.syncError
+        ? "Booking saved on this device. Cloud sync is currently unavailable."
+        : `Train ticket booked on ${train.trainName}! PNR: ${pnr}`,
+    );
+    navigate("/my-bookings", { state: { activeService: "trains" } });
   };
 
   return (

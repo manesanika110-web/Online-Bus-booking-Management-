@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaBus,
   FaPlus,
@@ -22,6 +22,7 @@ import {
   deleteBusFromFirestore,
 } from "./adminDataService";
 import { successAlert, errorAlert } from "../utils/alert";
+import { uploadImage } from "../utils/imageStorage";
 
 function AdminBuses({ buses = [], searchQuery = "", onAddNewBus }) {
   const [filterType, setFilterType] = useState("all");
@@ -46,8 +47,18 @@ function AdminBuses({ buses = [], searchQuery = "", onAddNewBus }) {
     seatType: "Sleeper",
     status: "Active",
     amenities: ["AC", "Charging Point", "Water Bottle", "Blanket", "Live GPS"],
+    photos: [],
   };
   const [formData, setFormData] = useState(initialForm);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
+  useEffect(
+    () => () => {
+      if (imagePreview.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+    },
+    [imagePreview],
+  );
 
   // Filter logic
   const filteredBuses = buses.filter((bus) => {
@@ -68,6 +79,8 @@ function AdminBuses({ buses = [], searchQuery = "", onAddNewBus }) {
   const handleOpenAdd = () => {
     setEditingBus(null);
     setFormData(initialForm);
+    setImageFile(null);
+    setImagePreview("");
     setIsAddModalOpen(true);
   };
 
@@ -89,8 +102,26 @@ function AdminBuses({ buses = [], searchQuery = "", onAddNewBus }) {
       seatType: bus.seatType || "Sleeper",
       status: bus.status || "Active",
       amenities: bus.amenities || ["AC", "Live GPS"],
+      photos: bus.photos || [],
     });
+    setImageFile(null);
+    setImagePreview(bus.photos?.[0] || "");
     setIsAddModalOpen(true);
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      errorAlert("Please select a valid image.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      errorAlert("Image size should not exceed 5MB.");
+      return;
+    }
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   const handleSubmitForm = async (e) => {
@@ -101,14 +132,24 @@ function AdminBuses({ buses = [], searchQuery = "", onAddNewBus }) {
     }
 
     try {
+      const busId = editingBus
+        ? editingBus.id || editingBus.docId
+        : Date.now();
+      const photoUrl = imageFile
+        ? await uploadImage(imageFile, `buses/${busId}/photo-${Date.now()}`)
+        : imagePreview;
+      const busData = {
+        ...formData,
+        photos: photoUrl ? [photoUrl] : [],
+      };
+
       if (editingBus) {
-        const busId = editingBus.id || editingBus.docId;
-        await updateBusInFirestore(busId, formData);
+        await updateBusInFirestore(busId, busData);
         successAlert("Bus information updated successfully!");
       } else {
         const newBusData = {
-          ...formData,
-          id: Math.floor(100 + Math.random() * 900),
+          ...busData,
+          id: busId,
           boardingPoints: [
             { time: formData.departure, location: `${formData.from} Central Bus Station` },
           ],
@@ -189,6 +230,16 @@ function AdminBuses({ buses = [], searchQuery = "", onAddNewBus }) {
           const status = bus.status || "Active";
           return (
             <div key={bus.id || bus.docId || Math.random()} className="admin-bus-card">
+              {bus.photos?.[0] && (
+                <img
+                  className="admin-bus-product-image"
+                  src={bus.photos[0]}
+                  alt={`${bus.name} bus`}
+                  onError={(event) => {
+                    event.currentTarget.src = "/images/photo-1544620347-c4fd4a3d5957.jpg";
+                  }}
+                />
+              )}
               <div className="bus-card-head">
                 <div className="bus-operator-info">
                   <h4>{bus.name}</h4>
@@ -281,6 +332,22 @@ function AdminBuses({ buses = [], searchQuery = "", onAddNewBus }) {
             </div>
 
             <form onSubmit={handleSubmitForm} className="admin-modal-form">
+              <div className="form-group full-width admin-bus-image-upload">
+                <label htmlFor="admin-bus-image">Bus photo</label>
+                <input
+                  id="admin-bus-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                {imagePreview && (
+                  <img
+                    className="admin-bus-image-preview"
+                    src={imagePreview}
+                    alt="Bus photo preview"
+                  />
+                )}
+              </div>
               <div className="modal-form-grid">
                 <div className="form-group">
                   <label>Bus / Operator Name *</label>

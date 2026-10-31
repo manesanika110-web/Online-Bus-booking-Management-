@@ -79,3 +79,515 @@ div.swal2-container.swal2-backdrop-show {
   background: #e2e8f0 !important;
   color: #0f172a !important;
 }
+
+body {
+  min-width: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .busvista-nav-container {
+    gap: 12px;
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .busvista-right-menu {
+    gap: 10px;
+  }
+
+  .hotels-search-card,
+  .flights-search-card,
+  .trains-search-card {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hotel-search-submit-btn,
+  .flight-search-submit-btn,
+  .train-search-submit-btn {
+    justify-content: center;
+  }
+
+  .flight-card-item {
+    grid-template-columns: minmax(150px, 0.8fr) minmax(0, 1.4fr) minmax(150px, 0.8fr);
+    gap: 12px;
+    padding: 18px;
+  }
+
+  .flight-route-col {
+    padding: 0 12px;
+  }
+
+  .track-main-grid-layout {
+    grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .busvista-nav-container {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .brand-name {
+    font-size: 20px;
+  }
+
+  .search-results-top-container {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .hotels-search-card,
+  .flights-search-card,
+  .trains-search-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .top-search-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .top-search-field {
+    min-width: 0;
+  }
+
+  .top-search-field.date-field,
+  .top-quick-pills {
+    grid-column: 1 / -1;
+  }
+
+  .top-search-submit-btn {
+    justify-content: center;
+    padding: 10px 16px;
+  }
+
+  .search-results-main-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 14px 36px;
+  }
+
+  .bus-filter-sidebar {
+    position: static;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .results-list-column,
+  .search-results-list,
+  .search-results-content,
+  .search-results-right-area {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .bus-card-main-content {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .bus-info-left-col {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .bus-pricing-right-col {
+    align-items: flex-start;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .pricing-meta-box,
+  .discount-strike-row {
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .bus-timing-schedule-row {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .schedule-duration-line {
+    width: clamp(56px, 18vw, 110px);
+  }
+
+  .passenger-page,
+  .payment-page,
+  .edit-profile-container {
+    align-items: flex-start;
+    padding: 24px 14px;
+  }
+
+  .passenger-card,
+  .payment-card,
+  .edit-profile-card {
+    width: 100%;
+    max-width: 600px;
+    padding: 24px 18px;
+  }
+
+  .passenger-page .row,
+  .payment-card .card-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .passenger-page .row .input-group,
+  .payment-card .card-row > * {
+    width: 100%;
+  }
+
+  .faint-red-main-container {
+    margin: 24px auto;
+    padding: 0 14px 36px;
+  }
+
+  .clean-profile-centered-card {
+    padding: 24px 20px;
+  }
+
+  .custom-photo-upload-card {
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px;
+  }
+
+  .profile-fields-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-page-container,
+  .about-step-card,
+  .cancel-step-card {
+    width: calc(100% - 28px);
+    max-width: 500px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .highlights-badges-row {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .action-buttons-group {
+    flex-wrap: wrap;
+  }
+
+  .action-buttons-group > button {
+    min-width: 140px;
+  }
+
+  .success-main-content-container,
+  .ticket-step-card,
+  .printable-ticket {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .booking-confirmed-title {
+    font-size: clamp(21px, 5vw, 26px);
+  }
+
+  .eticket-page-wrapper,
+  .dynamic-booking-success-page {
+    padding: 24px 12px;
+  }
+
+  .ticket-header-banner,
+  .ticket-official-header-strip {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .ticket-content {
+    padding: 16px 14px;
+  }
+
+  .track-modal-container {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+  }
+
+  .track-modal-header,
+  .track-search-bar-strip {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .track-main-grid-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .telemetry-panel-left {
+    border-right: 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .bus-sidebar {
+    width: min(100%, 480px);
+    padding: 24px 18px;
+  }
+
+  .hotel-item-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hotel-img-wrapper {
+    height: 190px;
+    min-height: 0;
+  }
+
+  .hotel-info-body {
+    padding: 18px;
+  }
+
+  .flight-card-item {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 18px;
+  }
+
+  .flight-route-col {
+    border: 0;
+    padding: 12px 0;
+  }
+
+  .flight-booking-col {
+    align-items: flex-start;
+  }
+
+  .train-schedule-strip {
+    gap: 10px;
+  }
+
+  .admin-navbar {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .admin-app-layout,
+  .admin-main-viewport {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+
+  .admin-page-content,
+  .admin-content-canvas {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .busvista-navbar {
+    height: 64px;
+  }
+
+  .busvista-nav-container {
+    gap: 8px;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .brand-name {
+    font-size: 18px;
+  }
+
+  .busvista-right-menu {
+    gap: 4px;
+  }
+
+  .nav-action-link {
+    padding: 6px 4px;
+  }
+
+  .mobile-nav-drawer {
+    top: 64px;
+    padding: 14px;
+  }
+
+  .mobile-services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .search-results-top-bar {
+    top: 64px;
+  }
+
+  .search-results-top-container {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .top-search-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .top-search-field,
+  .top-search-field.date-field,
+  .top-quick-pills,
+  .top-search-submit-btn {
+    grid-column: 1;
+  }
+
+  .top-search-field {
+    border-right: 0;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 0 0 8px;
+  }
+
+  .top-search-field.date-field {
+    padding-left: 0;
+  }
+
+  .top-quick-pills {
+    flex-wrap: wrap;
+  }
+
+  .passenger-card,
+  .payment-card,
+  .edit-profile-card {
+    padding: 20px 14px;
+  }
+
+  .booking-summary {
+    padding: 14px;
+  }
+
+  .payment-page {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .custom-photo-upload-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .photo-action-buttons-row {
+    justify-content: center;
+  }
+
+  .profile-title {
+    font-size: 19px;
+  }
+
+  .profile-card-header {
+    align-items: flex-start;
+  }
+
+  .contact-body,
+  .about-body-content,
+  .cancel-body-content {
+    padding: 16px;
+  }
+
+  .action-buttons-group {
+    flex-direction: column;
+  }
+
+  .action-buttons-group > button {
+    width: 100%;
+  }
+
+  .train-schedule-strip {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .track-modal-overlay {
+    padding: 8px;
+  }
+
+  .track-modal-header {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .track-header-left h2 {
+    font-size: 16px;
+  }
+
+  .track-header-actions {
+    gap: 6px;
+  }
+
+  .telemetry-panel-left {
+    padding: 14px;
+  }
+}
+
+body:has(.busvista-navbar) {
+  padding-top: 72px;
+}
+
+.busvista-navbar {
+  position: fixed;
+  inset: 0 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  body,
+  #root {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  main,
+  section,
+  article,
+  form,
+  .admin-page-content,
+  .admin-content-canvas,
+  .search-results-main-layout,
+  .search-results-right-area,
+  .admin-card-table-wrapper,
+  .admin-table-container,
+  .manifest-table-wrapper {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .admin-table-container,
+  .manifest-table-wrapper {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-custom-table {
+    min-width: 640px;
+  }
+}
+
+@media (max-width: 480px) {
+  body:has(.busvista-navbar) {
+    padding-top: 64px;
+  }
+}

@@ -17,9 +17,9 @@ import {
   FaShieldAlt,
   FaRupeeSign,
 } from "react-icons/fa";
-import { successAlert } from "../utils/alert";
-import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { successAlert, errorAlert } from "../utils/alert";
+import { auth } from "../firebase";
+import { persistBooking } from "../utils/localData";
 import "../css/Hotels.css";
 
 const sampleHotels = [
@@ -33,7 +33,7 @@ const sampleHotels = [
     reviews: 1240,
     price: 2850,
     originalPrice: 4200,
-    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80",
+    image: "/images/photo-1566073771259-6a8506099945.jpg",
     amenities: ["Free High-Speed WiFi", "Complimentary Breakfast", "Swimming Pool", "AC Deluxe"],
     roomType: "Executive AC Suite",
   },
@@ -47,7 +47,7 @@ const sampleHotels = [
     reviews: 2150,
     price: 3450,
     originalPrice: 5500,
-    image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80",
+    image: "/images/photo-1582719508461-905c673771fd.jpg",
     amenities: ["Beach View Balcony", "Free Breakfast", "Infinity Pool", "Spa & Bar"],
     roomType: "Sea-Facing Luxury Villa",
   },
@@ -61,7 +61,7 @@ const sampleHotels = [
     reviews: 980,
     price: 2400,
     originalPrice: 3600,
-    image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80",
+    image: "/images/photo-1542314831-068cd1dbfeeb.jpg",
     amenities: ["Free WiFi", "Multi-Cuisine Buffet", "Fitness Center", "Airport/Bus Shuttle"],
     roomType: "Premium King Room",
   },
@@ -75,7 +75,7 @@ const sampleHotels = [
     reviews: 650,
     price: 1850,
     originalPrice: 2800,
-    image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80",
+    image: "/images/photo-1571896349842-33c89424de2d.jpg",
     amenities: ["Free WiFi", "24/7 Room Service", "Pure Veg Restaurant", "Free Parking"],
     roomType: "Deluxe AC Room",
   },
@@ -89,7 +89,7 @@ const sampleHotels = [
     reviews: 1890,
     price: 4200,
     originalPrice: 6500,
-    image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80",
+    image: "/images/photo-1520250497591-112f2f40a3f4.jpg",
     amenities: ["Hill View Balcony", "Heated Pool", "Breakfast & Dinner", "Campfire"],
     roomType: "Valley View Cottage",
   },
@@ -108,7 +108,7 @@ const Hotels = () => {
     (h) => !destination || h.city.toLowerCase().includes(destination.toLowerCase()) || h.location.toLowerCase().includes(destination.toLowerCase())
   );
 
-  const handleBookHotel = (hotel) => {
+  const handleBookHotel = async (hotel) => {
     const user = auth?.currentUser;
     const uid = user?.uid || "";
     const userEmail = user?.email || "";
@@ -133,49 +133,37 @@ const Hotels = () => {
       rating: hotel.rating,
     };
 
-    if (uid) {
-      const userKey = `hotelBookings_${uid}`;
-      const savedUser = JSON.parse(localStorage.getItem(userKey)) || [];
-      savedUser.unshift(newHotelBooking);
-      localStorage.setItem(userKey, JSON.stringify(savedUser));
-
-      if (db) {
-        try {
-          // 1. Top-level bookings collection for real-time admin sync
-          setDoc(doc(db, "bookings", bookingId), newHotelBooking, { merge: true });
-
-          // 2. Top-level payments collection
-          const paymentId = "PAY_" + bookingId;
-          setDoc(
-            doc(db, "payments", paymentId),
-            {
-              transactionId: paymentId,
-              bookingId,
-              passengerName: user?.displayName || "Customer",
-              amount: newHotelBooking.totalAmount,
-              method: "Card",
-              status: "Success",
-              timestamp: new Date().toISOString(),
-            },
-            { merge: true }
-          );
-
-          if (uid) {
-            setDoc(doc(db, "users", uid, "hotelBookings", bookingId), newHotelBooking);
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      }
+    const paymentId = "PAY_" + bookingId;
+    let result;
+    try {
+      result = await persistBooking(newHotelBooking, "hotels", {
+        transactionId: paymentId,
+        paymentId,
+        bookingId,
+        passengerName: user?.displayName || "Customer",
+        email: userEmail,
+        amount: newHotelBooking.totalAmount,
+        method: "Card",
+        status: "Success",
+        timestamp: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (error) {
+      await errorAlert(error.message || "Unable to save this hotel booking.");
+      return;
     }
 
-    const saved = JSON.parse(localStorage.getItem("hotelBookings")) || [];
-    saved.unshift(newHotelBooking);
-    localStorage.setItem("hotelBookings", JSON.stringify(saved));
+    if (!result.localSaved && !result.remoteSaved) {
+      await errorAlert("Unable to save this hotel booking. Please try again.");
+      return;
+    }
 
-    successAlert(`Hotel room booked at ${hotel.name}!`).then(() => {
-      navigate("/my-bookings", { state: { activeService: "hotels" } });
-    });
+    await successAlert(
+      result.syncError
+        ? "Booking saved on this device. Cloud sync is currently unavailable."
+        : `Hotel room booked at ${hotel.name}!`,
+    );
+    navigate("/my-bookings", { state: { activeService: "hotels" } });
   };
 
   return (

@@ -1,31 +1,71 @@
 import { useState, useEffect } from "react";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { updateProfile, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import "../css/EditProfile.css";
 import { successAlert, errorAlert } from "../utils/alert";
-import { db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { FaUserCircle } from "react-icons/fa";
+import { imageDataUrlToFile, uploadImage } from "../utils/imageStorage";
+import { readStoredObject, writeStoredObject } from "../utils/localData";
 
 const EditProfile = () => {
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [photo, setPhoto] = useState("");
+  const [photoFile, setPhotoFile] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(
+    () => () => {
+      if (photo.startsWith("blob:")) URL.revokeObjectURL(photo);
+    },
+    [photo],
+  );
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setName(user.displayName || "");
+        const cachedProfile = readStoredObject(`profile_${user.uid}`) || {};
+        setName(
+          cachedProfile.fullName ||
+            localStorage.getItem("userName") ||
+            user.displayName ||
+            "",
+        );
 
-        const savedMobile = localStorage.getItem("mobile");
+        setMobile(
+          cachedProfile.mobile ||
+            localStorage.getItem("mobile") ||
+            localStorage.getItem("userMobile") ||
+            "",
+        );
+        setPhoto(
+          cachedProfile.profilePhoto ||
+            localStorage.getItem("profilePhoto") ||
+            user.photoURL ||
+            "",
+        );
 
-        setMobile(savedMobile || "");
-
-        const savedPhoto = localStorage.getItem("profilePhoto");
-
-        setPhoto(savedPhoto || "");
+        if (db) {
+          try {
+            const snapshot = await getDoc(doc(db, "users", user.uid));
+            if (snapshot.exists()) {
+              const profile = snapshot.data();
+              const cloudTime = new Date(profile.updatedAt || 0).getTime();
+              const cacheTime = new Date(cachedProfile.updatedAt || 0).getTime();
+              if (cloudTime >= cacheTime) {
+                if (profile.name || profile.displayName) {
+                  setName(profile.name || profile.displayName);
+                }
+                if (profile.mobile) setMobile(profile.mobile);
+                if (profile.profilePhoto) setPhoto(profile.profilePhoto);
+              }
+            }
+          } catch (error) {
+            console.warn("Unable to load the saved profile:", error);
+          }
+        }
       }
     });
 
@@ -49,13 +89,8 @@ const EditProfile = () => {
       return;
     }
 
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setPhoto(reader.result);
-    };
-
-    reader.readAsDataURL(file);
+    setPhotoFile(file);
+    setPhoto(URL.createObjectURL(file));
   };
 
   const handleUpdate = async (e) => {
@@ -67,26 +102,54 @@ const EditProfile = () => {
     }
 
     try {
-      await updateProfile(auth.currentUser, {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        errorAlert("Please sign in before saving your profile.");
+        return;
+      }
+
+      const savedPhoto = photoFile
+        ? await uploadImage(
+            photoFile,
+            `profiles/${currentUser.uid}/avatar-${Date.now()}`,
+          )
+        : photo.startsWith("data:image/")
+          ? await uploadImage(
+              imageDataUrlToFile(photo, "profile-photo"),
+              `profiles/${currentUser.uid}/avatar-${Date.now()}`,
+            )
+        : photo;
+
+      localStorage.setItem("userName", name);
+      localStorage.setItem("mobile", mobile);
+      localStorage.setItem("userMobile", mobile);
+      if (savedPhoto) localStorage.setItem("profilePhoto", savedPhoto);
+      else localStorage.removeItem("profilePhoto");
+      writeStoredObject(`profile_${currentUser.uid}`, {
+        fullName: name,
+        email: currentUser.email,
+        mobile,
+        profilePhoto: savedPhoto || "",
+        updatedAt: new Date().toISOString(),
+      });
+
+      await updateProfile(currentUser, {
         displayName: name,
+        photoURL: savedPhoto || "",
       });
 
       await setDoc(
-        doc(db, "users", auth.currentUser.uid),
+        doc(db, "users", currentUser.uid),
         {
           name,
-          email: auth.currentUser.email,
+          displayName: name,
+          email: currentUser.email,
           mobile,
-          profilePhoto: photo,
+          profilePhoto: savedPhoto,
+          updatedAt: new Date().toISOString(),
         },
         { merge: true },
       );
-      // Local Storage
-      localStorage.setItem("mobile", mobile);
-      localStorage.setItem("profilePhoto", photo);
-      console.log("Photo Saved:", photo);
-      console.log("LocalStorage:", localStorage.getItem("profilePhoto"));
-
       successAlert("Profile Updated Successfully!");
 
       navigate("/profile");

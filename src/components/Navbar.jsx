@@ -468,9 +468,11 @@ function Navbar() {
                 <Link
                   to="/login-register"
                   className="mobile-link-item mobile-login-action-btn"
+                  aria-label="Login / Register"
+                  title="Login / Register"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <FaUser /> Login / Register
+                  <FaUser aria-hidden="true" />
                 </Link>
               )}
             </div>

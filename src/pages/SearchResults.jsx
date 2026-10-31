@@ -10,6 +10,7 @@ import BusDetailsRightDrawer from "../components/BusDetailsRightDrawer";
 import PassengerDetailsModal from "../components/PassengerDetailsModal";
 import PaymentModal from "../components/PaymentModal";
 import { getBusesForRoute } from "../data/busData";
+import { subscribeToBuses } from "../admin/adminDataService";
 import { FaBus, FaExclamationCircle } from "react-icons/fa";
 import "../css/SearchResults.css";
 
@@ -22,6 +23,7 @@ function SearchResults() {
   const [currentFrom, setCurrentFrom] = useState(searchState.from || "Sangli");
   const [currentTo, setCurrentTo] = useState(searchState.to || "Goa");
   const [currentDate, setCurrentDate] = useState(searchState.date || "");
+  const [fleetBuses, setFleetBuses] = useState([]);
 
   // Photo modal state
   const [selectedPhotoBus, setSelectedPhotoBus] = useState(null);
@@ -59,10 +61,56 @@ function SearchResults() {
     if (location.state?.date) setCurrentDate(location.state.date);
   }, [location.state]);
 
+  useEffect(() => {
+    let active = true;
+    const unsubscribe = subscribeToBuses((buses) => {
+      queueMicrotask(() => {
+        if (active) setFleetBuses(buses);
+      });
+    });
+
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, []);
+
   // Fetch all base buses for the current route
   const baseBuses = useMemo(() => {
-    return getBusesForRoute(currentFrom, currentTo);
-  }, [currentFrom, currentTo]);
+    const normalizeCity = (city) => (city || "").trim().toLowerCase();
+    const routeBuses = getBusesForRoute(currentFrom, currentTo);
+    const busesById = new Map(
+      routeBuses.map((bus) => [String(bus.id), bus]),
+    );
+
+    fleetBuses
+      .filter(
+        (bus) =>
+          normalizeCity(bus.from) === normalizeCity(currentFrom) &&
+          normalizeCity(bus.to) === normalizeCity(currentTo) &&
+          bus.status !== "Maintenance",
+      )
+      .forEach((bus) => {
+        const id = String(bus.id || bus.docId);
+        const existing = busesById.get(id) || {};
+        busesById.set(id, {
+          ...existing,
+          ...bus,
+          id: bus.id || bus.docId,
+          category:
+            bus.category ||
+            (bus.type?.toLowerCase().includes("ac") ? "AC" : "Non-AC"),
+          seatType:
+            bus.seatType ||
+            (bus.type?.toLowerCase().includes("sleeper") ? "Sleeper" : "Seater"),
+          photos: bus.photos?.length ? bus.photos : existing.photos || [],
+          boardingPoints: bus.boardingPoints || existing.boardingPoints || [],
+          droppingPoints: bus.droppingPoints || existing.droppingPoints || [],
+        });
+      });
+
+    return Array.from(busesById.values());
+  }, [currentFrom, currentTo, fleetBuses]);
 
   // Extract unique operators, boarding points, dropping points, and max price for sidebar
   const { operatorsList, boardingList, droppingList, maxAvailablePrice } = useMemo(() => {

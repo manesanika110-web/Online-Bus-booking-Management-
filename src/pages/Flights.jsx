@@ -15,9 +15,9 @@ import {
   FaShieldAlt,
   FaArrowRight,
 } from "react-icons/fa";
-import { successAlert } from "../utils/alert";
-import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { successAlert, errorAlert } from "../utils/alert";
+import { auth } from "../firebase";
+import { persistBooking } from "../utils/localData";
 import "../css/Flights.css";
 
 const sampleFlights = [
@@ -25,7 +25,7 @@ const sampleFlights = [
     id: "FLT6E2041",
     flightNo: "6E-2041",
     airline: "IndiGo",
-    logo: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=120&q=80",
+    logo: "/images/photo-1540959733332-eab4deabeeaf.jpg",
     from: "Pune (PNQ)",
     to: "Delhi (DEL)",
     departure: "06:15 AM",
@@ -39,7 +39,7 @@ const sampleFlights = [
     id: "FLTAI864",
     flightNo: "AI-864",
     airline: "Air India",
-    logo: "https://images.unsplash.com/photo-1570710891163-6d3b5c47248b?auto=format&fit=crop&w=120&q=80",
+    logo: "/images/photo-1570710891163-6d3b5c47248b.jpg",
     from: "Mumbai (BOM)",
     to: "Goa (GOI)",
     departure: "09:30 AM",
@@ -53,7 +53,7 @@ const sampleFlights = [
     id: "FLTQP1311",
     flightNo: "QP-1311",
     airline: "Akasa Air",
-    logo: "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=120&q=80",
+    logo: "/images/photo-1569154941061-e231b4725ef1.jpg",
     from: "Pune (PNQ)",
     to: "Bangalore (BLR)",
     departure: "02:45 PM",
@@ -67,7 +67,7 @@ const sampleFlights = [
     id: "FLTUK992",
     flightNo: "UK-992",
     airline: "Vistara Premium",
-    logo: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=120&q=80",
+    logo: "/images/photo-1540959733332-eab4deabeeaf.jpg",
     from: "Kolhapur (KLH)",
     to: "Mumbai (BOM)",
     departure: "11:00 AM",
@@ -93,7 +93,7 @@ const Flights = () => {
     setToAirport(temp);
   };
 
-  const handleBookFlight = (flight) => {
+  const handleBookFlight = async (flight) => {
     const pnr = "FLT" + Math.floor(100000 + Math.random() * 900000);
     const bookingId = "FBK" + Math.floor(100000 + Math.random() * 900000);
 
@@ -123,42 +123,38 @@ const Flights = () => {
     newFlightBooking.userId = uid;
     newFlightBooking.userEmail = userEmail;
 
-    const saved = JSON.parse(localStorage.getItem("flightBookings")) || [];
-    saved.push(newFlightBooking);
-    localStorage.setItem("flightBookings", JSON.stringify(saved));
-
-    if (db) {
-      try {
-        setDoc(doc(db, "bookings", bookingId), newFlightBooking, { merge: true });
-        const paymentId = "PAY_" + bookingId;
-        setDoc(
-          doc(db, "payments", paymentId),
-          {
-            transactionId: paymentId,
-            paymentId: paymentId,
-            bookingId,
-            pnr,
-            passengerName: user?.displayName || "Customer",
-            email: userEmail,
-            amount: flight.price,
-            method: "Card",
-            status: "Success",
-            timestamp: new Date().toISOString(),
-            lastUpdated: new Date().toISOString(),
-          },
-          { merge: true }
-        );
-        if (uid) {
-          setDoc(doc(db, "users", uid, "flightBookings", bookingId), newFlightBooking);
-        }
-      } catch (e) {
-        console.log(e);
-      }
+    const paymentId = "PAY_" + bookingId;
+    let result;
+    try {
+      result = await persistBooking(newFlightBooking, "flights", {
+        transactionId: paymentId,
+        paymentId,
+        bookingId,
+        pnr,
+        passengerName: user?.displayName || "Customer",
+        email: userEmail,
+        amount: flight.price,
+        method: "Card",
+        status: "Success",
+        timestamp: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (error) {
+      await errorAlert(error.message || "Unable to save this flight booking.");
+      return;
     }
 
-    successAlert(`Flight ticket confirmed on ${flight.airline} (${flight.flightNo})! PNR: ${pnr}`).then(() => {
-      navigate("/my-bookings", { state: { activeService: "flights" } });
-    });
+    if (!result.localSaved && !result.remoteSaved) {
+      await errorAlert("Unable to save this flight booking. Please try again.");
+      return;
+    }
+
+    await successAlert(
+      result.syncError
+        ? "Booking saved on this device. Cloud sync is currently unavailable."
+        : `Flight ticket confirmed on ${flight.airline} (${flight.flightNo})! PNR: ${pnr}`,
+    );
+    navigate("/my-bookings", { state: { activeService: "flights" } });
   };
 
   return (

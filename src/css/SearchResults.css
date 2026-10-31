@@ -1136,6 +1136,29 @@
 }
 
 @media (max-width: 768px) {
+  .results-summary-sort-bar,
+  .summary-buses-found,
+  .sort-options-group {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .sort-options-group {
+    flex-wrap: wrap;
+  }
+
+  .sort-label-text {
+    flex: 0 0 100%;
+  }
+
+  .sort-pill-btn {
+    flex: 1 1 72px;
+    min-width: 0;
+    padding-right: 8px;
+    padding-left: 8px;
+    text-align: center;
+  }
+
   .top-search-form {
     flex-direction: column;
     border-radius: 20px;

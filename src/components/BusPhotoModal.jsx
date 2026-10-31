@@ -6,9 +6,9 @@ const BusPhotoModal = ({ isOpen, onClose, bus }) => {
   if (!isOpen || !bus) return null;
 
   const samplePhotos = [
-    "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
+    "/images/photo-1544620347-c4fd4a3d5957.jpg",
+    "/images/photo-1570125909232-eb263c188f7e.jpg",
+    "/images/photo-1568605117036-5fe5e7bab0b7.jpg",
   ];
 
   const photos = bus.photos && bus.photos.length > 0 ? bus.photos : samplePhotos;
@@ -86,6 +86,9 @@ const BusPhotoModal = ({ isOpen, onClose, bus }) => {
                   src={src}
                   alt={`Bus view ${index + 1}`}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  onError={(event) => {
+                    event.currentTarget.src = "/images/photo-1544620347-c4fd4a3d5957.jpg";
+                  }}
                 />
               </div>
             ))}

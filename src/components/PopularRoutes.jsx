@@ -25,7 +25,7 @@ const PopularRoutes = () => {
       price: 550,
       duration: "5h 30m",
       busesCount: "18+ Daily Buses",
-      image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80",
+      image: "/images/photo-1544620347-c4fd4a3d5957.jpg",
     },
     {
       id: 3,
@@ -34,7 +34,7 @@ const PopularRoutes = () => {
       price: 1200,
       duration: "8h 00m",
       busesCount: "14+ Daily Buses",
-      image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80",
+      image: "/images/photo-1568605117036-5fe5e7bab0b7.jpg",
     },
     {
       id: 4,
@@ -43,7 +43,7 @@ const PopularRoutes = () => {
       price: 720,
       duration: "5h 30m",
       busesCount: "10+ Daily Buses",
-      image: "https://images.unsplash.com/photo-1494515843206-f3117d3f51b7?auto=format&fit=crop&w=600&q=80",
+      image: "/images/photo-1494515843206-f3117d3f51b7.jpg",
     },
     {
       id: 5,

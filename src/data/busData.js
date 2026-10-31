@@ -39,8 +39,8 @@ const busData = [
     ],
     amenities: ["AC", "Charging Point", "Reading Light", "Water Bottle", "Blanket", "Emergency Exit", "Live GPS"],
     photos: [
-      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=600&q=80",
+      "/images/photo-1544620347-c4fd4a3d5957.jpg",
+      "/images/photo-1570125909232-eb263c188f7e.jpg",
     ],
   },
   {
@@ -80,7 +80,7 @@ const busData = [
     ],
     amenities: ["AC", "Charging Point", "Water Bottle", "Blanket", "Live GPS"],
     photos: [
-      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80",
+      "/images/photo-1544620347-c4fd4a3d5957.jpg",
     ],
   },
   {
@@ -119,7 +119,7 @@ const busData = [
       { time: "05:00 AM", location: "Panjim", landmark: "KTC Stand" },
     ],
     amenities: ["AC", "Free WiFi", "Charging Point", "Snacks", "Water Bottle", "Blanket"],
-    photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
   },
   {
     id: 104,
@@ -156,7 +156,7 @@ const busData = [
       { time: "04:30 AM", location: "Panjim", landmark: "Depot" },
     ],
     amenities: ["Charging Point", "Emergency Exit"],
-    photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
   },
 
   // 2. Sangli to Pune
@@ -196,7 +196,7 @@ const busData = [
       { time: "01:30 PM", location: "Wakad Bridge", landmark: "Hinjewadi Flyover" },
     ],
     amenities: ["AC", "Charging Point", "Water Bottle", "Blanket", "Live GPS"],
-    photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
   },
   {
     id: 2,
@@ -233,7 +233,7 @@ const busData = [
       { time: "03:00 PM", location: "Shivaji Nagar", landmark: "Bus Stand" },
     ],
     amenities: ["Charging Point", "Emergency Exit"],
-    photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
   },
   {
     id: 3,
@@ -270,7 +270,7 @@ const busData = [
       { time: "04:45 AM", location: "Viman Nagar", landmark: "Airport Road" },
     ],
     amenities: ["AC", "WiFi", "Charging Point", "Water Bottle", "Blanket", "Live GPS"],
-    photos: ["https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1570125909232-eb263c188f7e.jpg"],
   },
 
   // 3. Pune to Mumbai
@@ -311,7 +311,7 @@ const busData = [
       { time: "10:30 AM", location: "Dadar Asiad Stand", landmark: "Dadar East" },
     ],
     amenities: ["AC", "Charging Point", "Water Bottle", "CCTV", "Live GPS"],
-    photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
   },
   {
     id: 5,
@@ -349,7 +349,7 @@ const busData = [
       { time: "12:15 PM", location: "Borivali East National Park", landmark: "Western Express" },
     ],
     amenities: ["AC", "Free WiFi", "Charging Point", "Lounge Access", "Water Bottle", "Live GPS"],
-    photos: ["https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1570125909232-eb263c188f7e.jpg"],
   },
 
   // 4. Kolhapur to Mumbai
@@ -390,7 +390,7 @@ const busData = [
       { time: "06:00 AM", location: "Borivali East", landmark: "National Park" },
     ],
     amenities: ["AC", "Blanket", "Charging Point", "Water Bottle", "Live GPS"],
-    photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
   },
 
   // 5. Satara to Solapur
@@ -428,7 +428,7 @@ const busData = [
       { time: "04:30 PM", location: "Solapur Old Pune Naka", landmark: "Bus Stop" },
     ],
     amenities: ["AC", "Charging Point", "Water Bottle", "Live GPS"],
-    photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
   },
 
   // 6. Pune to Kolhapur
@@ -467,7 +467,7 @@ const busData = [
       { time: "01:30 AM", location: "Kawala Naka Kolhapur", landmark: "Main Highway" },
     ],
     amenities: ["AC", "WiFi", "Charging Point", "Water Bottle", "Blanket", "Live GPS"],
-    photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
   },
 
   // 7. Kolhapur to Pune
@@ -505,7 +505,7 @@ const busData = [
       { time: "10:30 AM", location: "Swargate", landmark: "Opp. Stand" },
     ],
     amenities: ["AC", "Charging Point", "Water Bottle"],
-    photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
   },
 
   // 8. Sangli to Solapur
@@ -543,7 +543,7 @@ const busData = [
       { time: "12:00 PM", location: "Solapur ST Stand", landmark: "Main Depot" },
     ],
     amenities: ["AC", "Charging Point", "Water Bottle"],
-    photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+    photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
   },
 ];
 
@@ -600,7 +600,7 @@ export const getBusesForRoute = (fromCity = "Sangli", toCity = "Goa") => {
         { time: "08:30 AM", location: `${toCity} Main Bus Station`, landmark: "Platform 4" },
       ],
       amenities: ["AC", "Charging Point", "Reading Light", "Water Bottle", "Blanket", "Live GPS"],
-      photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+      photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
     },
     {
       id: 902,
@@ -636,7 +636,7 @@ export const getBusesForRoute = (fromCity = "Sangli", toCity = "Goa") => {
         { time: "09:30 AM", location: `${toCity} Terminal`, landmark: "Platform 2" },
       ],
       amenities: ["AC", "Charging Point", "Water Bottle", "Blanket", "Live GPS"],
-      photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+      photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
     },
     {
       id: 903,
@@ -672,7 +672,7 @@ export const getBusesForRoute = (fromCity = "Sangli", toCity = "Goa") => {
         { time: "05:30 AM", location: `${toCity} VRL Hub`, landmark: "Central Depot" },
       ],
       amenities: ["AC", "Free WiFi", "Charging Point", "Water Bottle", "Blanket", "Emergency Exit", "Live GPS"],
-      photos: ["https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=600&q=80"],
+      photos: ["/images/photo-1570125909232-eb263c188f7e.jpg"],
     },
     {
       id: 904,
@@ -708,7 +708,7 @@ export const getBusesForRoute = (fromCity = "Sangli", toCity = "Goa") => {
         { time: "02:00 PM", location: `${toCity} ST Stand`, landmark: "Platform 3" },
       ],
       amenities: ["Charging Point", "Emergency Exit"],
-      photos: ["https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80"],
+      photos: ["/images/photo-1544620347-c4fd4a3d5957.jpg"],
     },
   ];
 };

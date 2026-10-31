@@ -18,7 +18,7 @@ const BusDetailsRightDrawer = ({ isOpen, onClose, bus }) => {
   if (!isOpen || !bus) return null;
 
   const defaultPhoto =
-    "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80";
+    "/images/photo-1544620347-c4fd4a3d5957.jpg";
   const busPhoto = bus.photos && bus.photos.length > 0 ? bus.photos[0] : defaultPhoto;
 
   const boardingPoints = bus.boardingPoints || [
@@ -75,7 +75,13 @@ const BusDetailsRightDrawer = ({ isOpen, onClose, bus }) => {
 
           {/* Bus Photo Banner */}
           <div className="clean-bus-photo-card">
-            <img src={busPhoto} alt={bus.name} />
+            <img
+              src={busPhoto}
+              alt={bus.name}
+              onError={(event) => {
+                event.currentTarget.src = defaultPhoto;
+              }}
+            />
             <div className="photo-route-overlay">
               <span>{bus.from} ➔ {bus.to}</span>
             </div>

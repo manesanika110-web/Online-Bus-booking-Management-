@@ -89,7 +89,7 @@ function LoginRegister() {
       );
 
       const defaultAvatar =
-        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80";
+        "/images/photo-1534528741775-53994a69daeb.jpg";
 
       await updateProfile(userCredential.user, {
         displayName: name.trim(),
